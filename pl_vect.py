@@ -1,7 +1,6 @@
 # MTF271 - Assignment 1
 # Johan Olson, Alexander Rodin
 import scipy.io as sio
-import scipy.linalg as la
 import numpy as np
 import matplotlib.pyplot as plt
 from dphidx_dy import dphidx_dy
@@ -14,7 +13,7 @@ tec=np.genfromtxt("tec.dat", dtype=None,comments="%")
 #text='VARIABLES = X Y P U V u2 v2 w2 uv mu_sgs prod'
 
 # import a lot of daataa and shuffle
-### Import data
+# ---- Import data
 x=tec[:,0]
 y=tec[:,1]
 p=tec[:,2]
@@ -120,7 +119,7 @@ dudx, dudy = dphidx_dy(xf2d,yf2d,u2d)
 dvdx, dvdy = dphidx_dy(xf2d,yf2d,v2d)
 
 
-### Plots 
+# ---- Plots 
 ################################ Example Plot Quiver for Case
 # =============================================================================
 # fig1 = plt.figure("Figure 1")
@@ -161,7 +160,7 @@ plt.savefig('k_rans.eps',bbox_inches='tight')
 # plt.savefig('uv_python.eps',bbox_inches='tight')
 # =============================================================================
 
-################################ A_1.1)
+# ---- A_1.1)
 
 # Line close to inlet
 fig11 = plt.figure("Figure 1.1a")
@@ -187,7 +186,7 @@ plt.title('1.1 (x = 1.07) vertical line', fontsize=20)
 plt.legend()
 plt.tight_layout()
 
-################################ A_1.2) 
+# ---- A_1.2) 
 # Eq. (R.1)
 # Convection Terms 
 du_udx, du_udy = dphidx_dy(xf2d,yf2d, np.multiply(u2d,u2d))
@@ -320,7 +319,7 @@ F_N[:,:,1] = -dvvdy
 F_S[:,:,0] = -duvdy
 F_S[:,:,1] = -duvdx
 
-################################# A_1.3)
+# ---- A_1.3)
 fig31 = plt.figure("Figure 1.3a")
 k=10# plot every
 plt.quiver(x2d[::k,::k], y2d[::k,::k], F_N[::k,::k,0], F_N[::k,::k,1],width=0.005)
@@ -337,7 +336,7 @@ plt.ylabel("$y$")
 plt.title("1.3) Zoom in, Normal Stresses Vector Plot", fontsize=20)
 plt.axis([0, 2, -0.3, 0.2])
 
-################################# A_1.4) 
+# ---- A_1.4) 
 # F_S
 fig41 = plt.figure("Figure 1.4a")
 k=10# plot every
@@ -379,7 +378,7 @@ plt.xlabel("$x$")
 plt.ylabel("$y$")
 plt.title("1.4) Viscous Diffusion y", fontsize=20)
 
-################################# A_1.5)
+# ---- A_1.5)
 
 # Production term
 P_k = np.zeros((ni,nj,5))
@@ -420,7 +419,7 @@ plt.axis([-0.05, 0.05, 0, 1])
 plt.legend()
 plt.tight_layout()
 
-################################# A_1.6)
+# ---- A_1.6)
 
 # Close to inlet, Compare with data for Eps
 fig61 = plt.figure("Figure 1.6a")
@@ -449,7 +448,7 @@ plt.tight_layout()
 plt.show()
 plt.close('all')
 
-################################# A_1.7)
+# ---- A_1.7)
 
 Cmu = 0.09; C1 = 1.5; C2 = 0.6; C1w = 0.5; C2w = 0.3; sigma_k = 1; rho = 1;
 
@@ -551,7 +550,7 @@ plt.axis([-0.06, 0.06, 0, 1])
 plt.legend()
 plt.tight_layout()
 
-################################# A_1.8)
+# ---- A_1.8)
 
 Bouss11 = np.multiply(-nu_t, 2*dudx) + (2/3)*k_RANS_2d
 Bouss12 = np.multiply(-nu_t, (dudy + dvdx)) + (2/3)*k_RANS_2d
@@ -590,7 +589,7 @@ plt.axis([-0.1, 0.1, 0, 1])
 plt.legend()
 plt.tight_layout()
 
-################################# A_1.9)
+# ---- A_1.9)
 
 P12 = - np.multiply(uu2d,dvdx) - np.multiply(uv2d,dvdy) - np.multiply(uv2d,dudx) - np.multiply(vv2d,dudy)
 
@@ -606,7 +605,7 @@ plt.colorbar()
 plt.show()
 plt.close('all')
 
-################################# A_1.10)
+# ---- A_1.10)
 
 Eigenvalues = np.zeros((ni,nj,2))
 
@@ -632,18 +631,7 @@ plt.xlabel("$x$")
 plt.ylabel("$y$")
 plt.title("Diff")
 plt.colorbar()   
-        
-# =============================================================================
-# fig101 = plt.figure("Figure 10a")
-# plt.contourf(x2d,y2d, S, 50)
-# plt.xlabel("$x$")
-# plt.ylabel("$y$")
-# plt.title("Sij")
-# plt.clim(0,1)
-# plt.colorbar()
-# 
-# =============================================================================
-
+      
 plt.show()
 
 
