@@ -120,45 +120,58 @@ dvdx, dvdy = dphidx_dy(xf2d,yf2d,v2d)
 
 
 # ---- Plots 
-################################ Example Plot Quiver for Case
-# =============================================================================
-# fig1 = plt.figure("Figure 1")
-# k=6# plot every forth vector
-# ss=3.2 #vector length
-# plt.quiver(x2d[::k,::k],y2d[::k,::k],u2d[::k,::k],v2d[::k,::k],width=0.01)
-# plt.xlabel("$x$")
-# plt.ylabel("$y$")
-# plt.title("vector plot")
-# plt.savefig('vect_python.eps',bbox_inches='tight')
-# =============================================================================
+################################ Velocity Field
+fig1 = plt.figure("Figure velocity")
+k=6    # plot every forth vector
+ss=3.2 #vector length
+plt.quiver(x2d[::k,::k],y2d[::k,::k],u2d[::k,::k],v2d[::k,::k],width=0.01)
+plt.xlabel("$x$"); plt.ylabel("$y$")
+plt.title("vector plot")
+plt.colorbar()
+plt.tight_layout()
 
-# =============================================================================
-# ################################ General Pressure Plot
-# fig2 = plt.figure("Figure 2")
-# plt.contourf(x2d,y2d,p2d, 50)
-# plt.xlabel("$x$")
-# plt.ylabel("$y$")
-# plt.title("contour pressure plot")
-# plt.savefig('piso_python.eps',bbox_inches='tight')
-# 
-# =============================================================================
+################################ Pressure Plot
+fig2 = plt.figure("Figure p")
+plt.contourf(x2d,y2d,p2d, 50)
+plt.xlabel("$x$"); plt.ylabel("$y$")
+plt.title("contour pressure plot")
+plt.colorbar()
+plt.tight_layout()
+
 ################################# Example Turbulent energy 
-fig3 = plt.figure("Figure 3")
+fig3 = plt.figure("Figure k")
 plt.contourf(x2d,y2d,k_RANS_2d, 50)
-plt.xlabel("$x$")
-plt.ylabel("$y$")
+plt.xlabel("$x$"); plt.ylabel("$y$")
 plt.title("contour k RANS plot")
-plt.savefig('k_rans.eps',bbox_inches='tight')
+plt.colorbar()
+plt.tight_layout()
 
-# =============================================================================
-# ################################ Example uv plot
-# fig4 = plt.figure("Figure 4")
-# i=10
-# plt.plot(uv2d[i,:],y2d[i,:],'b-')
-# plt.xlabel('$\overline{u^\prime v^\prime}$')
-# plt.ylabel('y/H')
-# plt.savefig('uv_python.eps',bbox_inches='tight')
-# =============================================================================
+################################ Example uu plot
+fig4 = plt.figure("Figure uu")
+plt.contourf(x2d,y2d,uu2d, 50, levels = np.linspace(np.min(uv2d), np.max(uu2d), 50))
+plt.xlabel('$\overline{u^\prime u^\prime}$')
+plt.ylabel("$y$")
+plt.title("uu counter plot")
+plt.colorbar()
+plt.tight_layout()
+
+################################ Example vv plot
+fig5 = plt.figure("Figure vv")
+plt.contourf(x2d,y2d,vv2d, 50, levels = np.linspace(np.min(uv2d), np.max(uu2d), 50))
+plt.xlabel('$\overline{v^\prime v^\prime}$')
+plt.ylabel("$y$")
+plt.title("vv counter plot")
+plt.colorbar()
+plt.tight_layout()
+
+################################ Example uv plot
+fig6 = plt.figure("Figure uv")
+plt.contourf(x2d,y2d,uv2d, 50, levels = np.linspace(np.min(uv2d), np.max(uu2d), 50))
+plt.xlabel('$\overline{u^\prime v^\prime}$')
+plt.ylabel("$y$")
+plt.title("uv counter plot")
+plt.colorbar()
+plt.tight_layout()
 
 # ---- A_1.1)
 
@@ -174,7 +187,7 @@ plt.title('1.1 (x = 0.10) vertical line', fontsize=20)
 plt.legend()
 plt.tight_layout()
 
-# Line at recirculation
+# Line at turbulence
 fig12 = plt.figure("Figure 1.1b")
 i=50 # 1.069507
 plt.plot(uu2d[i,:],y2d[i,:],'b-', label='$\overline{u^{\prime 2}}$')
@@ -206,7 +219,7 @@ dv2dx2, NaN3   = dphidx_dy(xf2d,yf2d, dvdx)
 NaN4,   dv2dy2 = dphidx_dy(xf2d,yf2d, dvdy)
 
 # Turbulence Terms
-duudx,  duudy   = dphidx_dy(xf2d,yf2d, uu2d)
+duudx,  duudy  = dphidx_dy(xf2d,yf2d, uu2d)
 duvdx,  duvdy  = dphidx_dy(xf2d,yf2d, uv2d)
 dvvdx,  dvvdy  = dphidx_dy(xf2d,yf2d, vv2d)
 
@@ -221,7 +234,7 @@ plt.plot(-nu*du2dx2[i,:],y2d[i,:],'y-',label='4')
 plt.plot(duudx[i,:],y2d[i,:],'m-',   label='5')
 plt.plot(-nu*du2dy2[i,:],y2d[i,:],'k-',label='6')
 plt.plot(duvdy[i,:],y2d[i,:],'c-',   label='7')
-plt.xlabel('change me')
+plt.xlabel('Term size (Eq. R.1)')
 plt.ylabel('y/H')
 plt.title('1.2 (x = 0.10) vertical line', fontsize=20)
 plt.axis([-0.1, 0.1, 0, 1])
@@ -236,7 +249,7 @@ plt.plot(-nu*dv2dx2[i,:],y2d[i,:],'y-',label='4')
 plt.plot(duvdx[i,:],y2d[i,:],'m-',   label='5')
 plt.plot(-nu*dv2dy2[i,:],y2d[i,:],'k-',label='6')
 plt.plot(dvvdy[i,:],y2d[i,:],'c-',   label='7')
-plt.xlabel('change me')
+plt.xlabel('Term size (Eq. R.1)')
 plt.ylabel('y/H')
 plt.title('1.2 (x = 0.10) vertical line', fontsize=20)
 plt.axis([-0.1, 0.1, 0, 1])
@@ -254,7 +267,7 @@ plt.plot(-nu*du2dx2[i,:],y2d[i,:],'y-',label='4')
 plt.plot(duudx[i,:],y2d[i,:],'m-',   label='5')
 plt.plot(-nu*du2dy2[i,:],y2d[i,:],'k-',label='6')
 plt.plot(duvdy[i,:],y2d[i,:],'c-',   label='7')
-plt.xlabel('change me')
+plt.xlabel('Term size (Eq. R.1)')
 plt.ylabel('y/H')
 plt.title('1.2 (x = 1.07) vertical line', fontsize=20)
 plt.axis([-0.1, 0.1, 0, 1])
@@ -269,7 +282,7 @@ plt.plot(-nu*dv2dx2[i,:],y2d[i,:],'y-',label='4')
 plt.plot(duvdx[i,:],y2d[i,:],'m-',   label='5')
 plt.plot(-nu*dv2dy2[i,:],y2d[i,:],'k-',label='6')
 plt.plot(dvvdy[i,:],y2d[i,:],'c-',   label='7')
-plt.xlabel('change me')
+plt.xlabel('Term size (Eq. R.1)')
 plt.ylabel('y/H')
 plt.title('1.2 (x = 1.07) vertical line', fontsize=20)
 plt.axis([-0.1, 0.1, 0, 1])
@@ -287,7 +300,7 @@ plt.plot(-nu*du2dx2[i,:],y2d[i,:],'y-',label='4')
 plt.plot(duudx[i,:],y2d[i,:],'m-',   label='5')
 plt.plot(-nu*du2dy2[i,:],y2d[i,:],'k-',label='6')
 plt.plot(duvdy[i,:],y2d[i,:],'c-',   label='7')
-plt.xlabel('change me')
+plt.xlabel('Term size (Eq. R.1)')
 plt.ylabel('y/H')
 plt.title('1.2 (x = 1.07) vertical line', fontsize=20)
 plt.axis([-0.1, 0.1, 0, 0.01])
@@ -302,7 +315,7 @@ plt.plot(-nu*dv2dx2[i,:],y2d[i,:],'y-',label='4')
 plt.plot(duvdx[i,:],y2d[i,:],'m-',   label='5')
 plt.plot(-nu*dv2dy2[i,:],y2d[i,:],'k-',label='6')
 plt.plot(dvvdy[i,:],y2d[i,:],'c-',   label='7')
-plt.xlabel('change me')
+plt.xlabel('Term size (Eq. R.1)')
 plt.ylabel('y/H')
 plt.title('1.2 (x = 1.07) vertical line', fontsize=20)
 plt.axis([-0.1, 0.1, 0, 0.01])
@@ -323,71 +336,72 @@ F_S[:,:,1] = -duvdx
 fig31 = plt.figure("Figure 1.3a")
 k=10# plot every
 plt.quiver(x2d[::k,::k], y2d[::k,::k], F_N[::k,::k,0], F_N[::k,::k,1],width=0.005)
-plt.xlabel("$x$")
-plt.ylabel("$y$")
+plt.xlabel("$x$"); plt.ylabel("$y$")
 plt.title("1.3) Normal Stresses Vector Plot", fontsize=20)
+plt.tight_layout()
 
 # Zooom
 fig32 = plt.figure("Figure 1.3b")
 k=10# plot every
 plt.quiver(x2d[::k,::k], y2d[::k,::k], F_N[::k,::k,0], F_N[::k,::k,1],width=0.005)
-plt.xlabel("$x$")
-plt.ylabel("$y$")
+plt.xlabel("$x$"); plt.ylabel("$y$")
 plt.title("1.3) Zoom in, Normal Stresses Vector Plot", fontsize=20)
 plt.axis([0, 2, -0.3, 0.2])
+plt.tight_layout()
 
 # ---- A_1.4) 
 # F_S
 fig41 = plt.figure("Figure 1.4a")
 k=10# plot every
 plt.quiver(x2d[::k,::k], y2d[::k,::k], F_S[::k,::k,0], F_S[::k,::k,1],width=0.005)
-plt.xlabel("$x$")
-plt.ylabel("$y$")
+plt.xlabel("$x$"); plt.ylabel("$y$")
 plt.title("1.4) Shear Stress Vector Plot", fontsize=20)
-    
+plt.tight_layout()    
+
 # Zooom
 fig42 = plt.figure("Figure 1.4b")
 k=10# plot every
 plt.quiver(x2d[::k,::k], y2d[::k,::k], F_S[::k,::k,0], F_S[::k,::k,1],width=0.005)
-plt.xlabel("$x$")
-plt.ylabel("$y$")
+plt.xlabel("$x$"); plt.ylabel("$y$")
 plt.title("1.4) Zoom in, Normal Stresses Vector Plot", fontsize=20)
 plt.axis([0, 2, -0.3, 0.2])
+plt.tight_layout()
 
 # Pressure
 fig43 = plt.figure("Figure 1.4c")
 k=10# plot every
 plt.quiver(x2d[::k,::k], y2d[::k,::k], dpdx[::k,::k], dpdy[::k,::k],width=0.005)
-plt.xlabel("$x$")
-plt.ylabel("$y$")
+plt.xlabel("$x$"); plt.ylabel("$y$")
 plt.title("1.4) Pressure Gradient Vector Plot", fontsize=20)
+plt.tight_layout()
 
 # Viscous x
 fig44 = plt.figure("Figure 1.4d")
 k=10# plot every
 plt.quiver(x2d[::k,::k], y2d[::k,::k], nu*du2dx2[::k,::k], nu*du2dy2[::k,::k],width=0.005)
-plt.xlabel("$x$")
-plt.ylabel("$y$")
+plt.xlabel("$x$"); plt.ylabel("$y$")
 plt.title("1.4) Viscous Diffusion x", fontsize=20)
+plt.tight_layout()
 
 # Viscous y
 fig45 = plt.figure("Figure 1.4e")
 k=10# plot every
 plt.quiver(x2d[::k,::k], y2d[::k,::k], nu*dv2dx2[::k,::k], nu*dv2dy2[::k,::k],width=0.005)
-plt.xlabel("$x$")
-plt.ylabel("$y$")
+plt.xlabel("$x$"); plt.ylabel("$y$")
 plt.title("1.4) Viscous Diffusion y", fontsize=20)
+plt.tight_layout()
 
 # ---- A_1.5)
 
 # Production term
-P_k = np.zeros((ni,nj,5))
+P_k = np.zeros((ni,nj,6))
 
 P_k[:,:,0] = - np.multiply(uu2d,dudx)
 P_k[:,:,1] = - np.multiply(uv2d,dudy)
 P_k[:,:,2] = - np.multiply(uv2d,dvdx)
 P_k[:,:,3] = - np.multiply(vv2d,dvdy)
 P_k[:,:,4] = P_k[:,:,0] + P_k[:,:,1] + P_k[:,:,2] + P_k[:,:,3]
+P_k[:,:,5] = P_k[:,:,0] + P_k[:,:,3]
  
 # Close to inlet
 fig51 = plt.figure("Figure 1.5a")
@@ -445,9 +459,6 @@ plt.axis([-0.05, 0.05, 0, 1])
 plt.legend()
 plt.tight_layout()
 
-plt.show()
-plt.close('all')
-
 # ---- A_1.7)
 
 Cmu = 0.09; C1 = 1.5; C2 = 0.6; C1w = 0.5; C2w = 0.3; sigma_k = 1; rho = 1;
@@ -456,65 +467,123 @@ Cmu = 0.09; C1 = 1.5; C2 = 0.6; C1w = 0.5; C2w = 0.3; sigma_k = 1; rho = 1;
 # 11
 duuudx, empty  = dphidx_dy(xf2d,yf2d, np.multiply(u2d, uu2d))
 empty,  dvuudy = dphidx_dy(xf2d,yf2d, np.multiply(v2d, uu2d))
+# 12
+duuvdx, empty  = dphidx_dy(xf2d,yf2d, np.multiply(u2d, uv2d))
+empty,  dvuvdy = dphidx_dy(xf2d,yf2d, np.multiply(v2d, uv2d))
 # 22
 duvvdx, empty  = dphidx_dy(xf2d,yf2d, np.multiply(u2d, vv2d))
 empty,  dvvvdy = dphidx_dy(xf2d,yf2d, np.multiply(v2d, vv2d))
 
 C11 = duuudx + dvuudy
+C12 = duuvdx + dvuvdy
 C22 = duvvdx + dvvvdy
 
 # Viscous Diffusion
 # 11
 duudx2, empty = dphidx_dy(xf2d,yf2d, duudx)
 empty,  duudy2 = dphidx_dy(xf2d,yf2d, duudy)
+# 12
+duvdx2, empty = dphidx_dy(xf2d,yf2d, duvdx)
+empty,  duvdy2 = dphidx_dy(xf2d,yf2d, duvdy)
 # 22
 dvvdx2, empty = dphidx_dy(xf2d,yf2d, dvvdx)
 empty, dvvdy2 = dphidx_dy(xf2d,yf2d, dvvdy)
 
 D11v = nu*duudx2 + nu*duudy2
+D12v = nu*duvdx2 + nu*duvdy2
 D22v = nu*dvvdx2 + nu*dvvdy2
 
 # Production
 # 11
 P11 = -2*(np.multiply(uu2d, dudx) + np.multiply(uv2d, dudy))
+# 12
+P12 = -(np.multiply(uu2d, dvdx) + np.multiply(vv2d, dudy) + np.multiply(uv2d, dudx + dvdy))
 # 22
 P22 = -2*(np.multiply(uv2d, dvdx) + np.multiply(vv2d, dvdy)) 
 
 # Pressure-Strain
-# 11
-Phi111 = -C1*rho*np.multiply(np.divide(diss_RANS_2d,k_RANS_2d), uu2d-(2/3)*k_RANS_2d)
-##
-Phi112 = -C2*rho*(P11-(2/3)*P_k[i,:,4])
-# 22
+## 11
+Phi121 = -C1*rho*np.multiply(np.divide(diss_RANS_2d,k_RANS_2d), uu2d-(2/3)*k_RANS_2d)
+#
+Phi122 = -C2*rho*(P11-(2/3)*P_k[i,:,5])
+
+## 12
+Phi111 = -C1*rho*np.multiply(np.divide(diss_RANS_2d,k_RANS_2d), uv2d)
+#
+Phi112 = -C2*rho*P12
+
+## 22
 Phi221 = -C1*rho*np.multiply(np.divide(diss_RANS_2d,k_RANS_2d), vv2d-(2/3)*k_RANS_2d)
-##
-Phi222 = -C2*rho*(P22-(2/3)*P_k[i,:,4])
+#
+Phi222 = -C2*rho*(P22-(2/3)*P_k[i,:,5])
 
 Phi11  = Phi111 + Phi112
+Phi12  = Phi121 + Phi122
 Phi22  = Phi221 + Phi222
 
 ## Turbulent Diffusion
-nu_t = Cmu*np.divide(np.multiply(k_RANS_2d, k_RANS_2d), diss_RANS_2d)
+#nu_t = Cmu*np.divide(np.multiply(k_RANS_2d, vist_RANS_2d), diss_RANS_2d)
 # 11 
-D111, empty = dphidx_dy(xf2d,yf2d, np.multiply(nu_t/sigma_k, duudx))
-empty, D112 = dphidx_dy(xf2d,yf2d, np.multiply(nu_t/sigma_k, duudy))
+D111, empty = dphidx_dy(xf2d,yf2d, np.multiply(vist_RANS_2d/sigma_k, duudx))
+empty, D112 = dphidx_dy(xf2d,yf2d, np.multiply(vist_RANS_2d/sigma_k, duudy))
+# 12
+D121, empty = dphidx_dy(xf2d,yf2d, np.multiply(vist_RANS_2d/sigma_k, duvdx))
+empty, D122 = dphidx_dy(xf2d,yf2d, np.multiply(vist_RANS_2d/sigma_k, duvdy))
 # 22 
-D221, empty = dphidx_dy(xf2d,yf2d, np.multiply(nu_t/sigma_k, dvvdx))
-empty, D222 = dphidx_dy(xf2d,yf2d, np.multiply(nu_t/sigma_k, dvvdy))
+D221, empty = dphidx_dy(xf2d,yf2d, np.multiply(vist_RANS_2d/sigma_k, dvvdx))
+empty, D222 = dphidx_dy(xf2d,yf2d, np.multiply(vist_RANS_2d/sigma_k, dvvdy))
 
-D11 = D111 + D112
-D22 = D221 + D222
+D11t = D111 + D112
+D12t = D121 + D122
+D22t = D221 + D222
 
-# Dissipation
+## Dissipation
 # 11
 Eps11 = (2/3)*diss_RANS_2d
+# 12
+Eps12 = np.zeros((ni,nj))
 # 22
 Eps22 = (2/3)*diss_RANS_2d
 
+## Pressure Strain Wall
+
+## west face
+# parallell vector
+sx_w=np.diff(x2d,axis=1) 
+sy_w=np.diff(y2d,axis=1) 
+   
+# duplicate last column and put it at the end
+sx_w=np.insert(sx_w,-1,sx_w[:,-1],axis=1)
+sy_w=np.insert(sy_w,-1,sy_w[:,-1],axis=1)
+
+# normalize
+d=np.sqrt(sx_w**2+sy_w**2)
+nx_w=sy_w/d # approx. west face as east (small CV) TODO: fix afterwards
+ny_w=-sx_w/d
+
+# normalvector products
+n1n1 = np.multiply(nx_w, nx_w)
+n1n2 = np.multiply(nx_w, ny_w)
+n2n2 = np.multiply(ny_w, ny_w)
+
+f = np.minimum((1/2.55)*np.divide(np.divide(np.power(k_RANS_2d,3/2),diss_RANS_2d), d), np.ones((ni,nj)))
+
+K1 = np.multiply(f, C1w*np.divide(diss_RANS_2d, k_RANS_2d))
+K2 = C2w*f
+
+Phi111W = K1*( - 2*np.multiply(uu2d,n1n1) - np.multiply(uv2d,n1n2) + np.multiply(vv2d,n2n2))
+Phi112W = K2*( -2*np.multiply(Phi112, n1n1) - np.multiply(Phi122, n1n2) + np.multiply(Phi222,n2n2))
+Phi121W = -1.5*K1*(2*np.multiply(k_RANS_2d, n1n1) + np.multiply(uv2d, n1n1 + n2n2))
+Phi122W = -1.5*K2*(np.multiply(n1n2, Phi112 + Phi222) + np.multiply(Phi122, n1n1+n2n2))
+
+Phi11  += Phi111W + Phi112W
+Phi12  += Phi121W + Phi122W
+
 # Total
 
-Total_Stress11 = -C11 + D11v + P11 + Phi11 + D11 - Eps11
-Total_Stress22 = -C22 + D22v + P22 + Phi22 + D22 - Eps22
+Total_Stress11 = -C11 + D11v + P11 + Phi11 + D11t - Eps11
+Total_Stress12 = -C12 + D12v + P12 + Phi12 + D12t - Eps12
+Total_Stress22 = -C22 + D22v + P22 + Phi22 + D22t - Eps22
 
 # Plot Close to inlet 11
 fig71 = plt.figure("Figure 1.7a")
@@ -523,10 +592,27 @@ plt.plot(-C11[i,:],y2d[i,:],'b-',   label='1')
 plt.plot(D11v[i,:],y2d[i,:],'g-',   label='2')
 plt.plot(P11[i,:],y2d[i,:],'r-',    label='3')
 plt.plot(Phi11[i,:],y2d[i,:],'y-',label='4')
-plt.plot(D11[i,:],y2d[i,:],'m-',   label='5')
+plt.plot(D11t[i,:],y2d[i,:],'m-',   label='5')
 plt.plot(-Eps11[i,:],y2d[i,:],'k-',label='6')
 plt.plot(Total_Stress11[i,:],y2d[i,:],'c-',label='7')
-plt.xlabel('change me')
+plt.xlabel('Stress terms')
+plt.ylabel('y/H')
+plt.title('1.7 (x = 0.10) vertical line', fontsize=20)
+plt.axis([-0.03, 0.03, 0, 1])
+plt.legend()
+plt.tight_layout()
+
+# Plot Close to inlet 12
+fig72 = plt.figure("Figure 1.7b")
+i=5
+plt.plot(-C12[i,:],y2d[i,:],'b-',   label='1')
+plt.plot(D12v[i,:],y2d[i,:],'g-',   label='2')
+plt.plot(P12[i,:],y2d[i,:],'r-',    label='3')
+plt.plot(Phi12[i,:],y2d[i,:],'y-',label='4')
+plt.plot(D12t[i,:],y2d[i,:],'m-',   label='5')
+plt.plot(-Eps12[i,:],y2d[i,:],'k-',label='6')
+plt.plot(Total_Stress12[i,:],y2d[i,:],'c-',label='7')
+plt.xlabel('Stress Terms')
 plt.ylabel('y/H')
 plt.title('1.7 (x = 0.10) vertical line', fontsize=20)
 plt.axis([-0.06, 0.06, 0, 1])
@@ -534,79 +620,66 @@ plt.legend()
 plt.tight_layout()
 
 # Plot Close to inlet 22
-fig72 = plt.figure("Figure 1.7b")
+fig73 = plt.figure("Figure 1.7c")
 i=5
 plt.plot(-C22[i,:],y2d[i,:],'b-',   label='1')
 plt.plot(D22v[i,:],y2d[i,:],'g-',   label='2')
 plt.plot(P22[i,:],y2d[i,:],'r-',    label='3')
 plt.plot(Phi22[i,:],y2d[i,:],'y-',label='4')
-plt.plot(D22[i,:],y2d[i,:],'m-',   label='5')
+plt.plot(D22t[i,:],y2d[i,:],'m-',   label='5')
 plt.plot(-Eps22[i,:],y2d[i,:],'k-',label='6')
 plt.plot(Total_Stress22[i,:],y2d[i,:],'c-',label='7')
-plt.xlabel('change me')
+plt.xlabel('Stress terms')
 plt.ylabel('y/H')
 plt.title('1.7 (x = 0.10) vertical line', fontsize=20)
-plt.axis([-0.06, 0.06, 0, 1])
+plt.axis([-0.03, 0.03, 0, 1])
 plt.legend()
 plt.tight_layout()
 
 # ---- A_1.8)
+Bouss11 = np.multiply(-vist_RANS_2d, 2*dudx) + (2/3)*k_RANS_2d
+Bouss12 = np.multiply(-vist_RANS_2d, (dudy + dvdx))
+Bouss22 = np.multiply(-vist_RANS_2d, 2*dvdy) + (2/3)*k_RANS_2d
 
-Bouss11 = np.multiply(-nu_t, 2*dudx) + (2/3)*k_RANS_2d
-Bouss12 = np.multiply(-nu_t, (dudy + dvdx)) + (2/3)*k_RANS_2d
-Bouss22 = np.multiply(-nu_t, 2*dvdy) + (2/3)*k_RANS_2d
-
-fig81 = plt.figure("Figure 1.8a")
-i=50
-plt.plot(Bouss11[i,:],y2d[i,:],'b-',   label='Approx.')
-plt.plot(uu2d[i,:],y2d[i,:],'r-',   label='Data')
-plt.xlabel('change me')
-plt.ylabel('y/H')
-plt.title('1.8 (x = 1.07) vertical line', fontsize=20)
-plt.axis([-0.1, 0.1, 0, 1])
-plt.legend()
+fig81 = plt.figure("1.8a")
+plt.contourf(x2d,y2d, Bouss11, 50, levels = np.linspace(np.min(uv2d), np.max(uu2d), 50))
+plt.xlabel('$x$')
+plt.ylabel("$y$")
+plt.title("Bouss11")
+plt.colorbar()
 plt.tight_layout()
 
-fig82 = plt.figure("Figure 1.8b")
-i=50
-plt.plot(Bouss22[i,:],y2d[i,:],'b-',   label='Approx.')
-plt.plot(vv2d[i,:],y2d[i,:],'r-',   label='Data')
-plt.xlabel('change me')
-plt.ylabel('y/H')
-plt.title('1.8 (x = 1.07) vertical line', fontsize=20)
-plt.axis([-0.1, 0.1, 0, 1])
-plt.legend()
-plt.tight_layout()
-
-fig83 = plt.figure("Figure 1.8c")
-i=50
-plt.plot(Bouss12[i,:],y2d[i,:],'b-',   label='Approx.')
-plt.plot(uv2d[i,:],y2d[i,:],'r-',   label='Data')
-plt.xlabel('change me')
-plt.ylabel('y/H')
-plt.title('1.8 (x = 1.07) vertical line', fontsize=20)
-plt.axis([-0.1, 0.1, 0, 1])
-plt.legend()
+fig82 = plt.figure("1.8b")
+plt.contourf(x2d,y2d, Bouss12, 50, levels = np.linspace(np.min(uv2d), np.max(uu2d), 50))
+plt.xlabel('$x$')
+plt.ylabel("$y$")
+plt.title("Bouss12")
+plt.colorbar()
 plt.tight_layout()
 
 # ---- A_1.9)
-
-P12 = - np.multiply(uu2d,dvdx) - np.multiply(uv2d,dvdy) - np.multiply(uv2d,dudx) - np.multiply(vv2d,dudy)
-
 P_tot = P11 + P22
 
-fig91 = plt.figure("Figure 91")
+fig91 = plt.figure("Figure 1.9a")
 plt.contourf(x2d,y2d, P_tot, 50)
-plt.xlabel("$x$")
-plt.ylabel("$y$")
+plt.xlabel("$x$"); plt.ylabel("$y$")
 plt.title("Production")
 plt.colorbar()
 
-plt.show()
-plt.close('all')
+fig92 = plt.figure("Figure 1.9b")
+plt.contourf(x2d,y2d, P12, 50)
+plt.xlabel("$x$"); plt.ylabel("$y$")
+plt.title("Production")
+plt.colorbar()
+
+fig93 = plt.figure("Figure 1.9c")
+plt.contourf(x2d,y2d, P_tot, 50, levels = np.linspace(np.min(P_tot),0,50))
+plt.plot(x2d[:,0],y2d[:,0], 'k-')
+plt.xlabel("$x$"); plt.ylabel("$y$")
+plt.title("Negative Production")
+plt.colorbar()
 
 # ---- A_1.10)
-
 Eigenvalues = np.zeros((ni,nj,2))
 
 BigSMatrix = np.zeros((ni,nj,2,2))
@@ -621,12 +694,35 @@ for i in range(ni):
         S = np.array([[s11[i,j], s12[i,j]], [s21[i,j], s22[i,j]]])
         eigs, empty = np.linalg.eig(S)
         Eigenvalues[i,j,0] = eigs[0]
-        Eigenvalues[i,j,1] = eigs[1]
+        Eigenvalues[i,j,1] = eigs[1] 
         
-limiter = np.divide(k_RANS_2d, 3*np.abs(Eigenvalues[:,:,0]))     
+limiter = np.divide(k_RANS_2d, 3*np.abs(Eigenvalues[:,:,0])) # numerically
+limiter = np.multiply(np.sqrt(2*np.divide(1,np.multiply(s11,s11))),k_RANS_2d/3) # algebraic
 
-fig101 = plt.figure("Figure 10a")
-plt.contourf(x2d,y2d, nu_t - limiter , 50, levels = np.linspace(0, 0.90*np.max(nu_t - limiter), 20))
+diff_nu_t = vist_RANS_2d - limiter
+
+fig101 = plt.figure("Figure 1.10a")
+i=5
+plt.plot(diff_nu_t[i,:], y2d[i,:],'r-')
+plt.plot(np.zeros((nj)), y2d[i,:],'k-')
+plt.xlabel('Difference nu_t vs limiter')
+plt.ylabel('y/H')
+plt.title('1.10) (x = 0.10) vertical line', fontsize=20)
+#plt.axis([np.min(diff_nu_t), np.max(diff_nu_t), 0, 1])
+plt.tight_layout()    
+
+fig102 = plt.figure("Figure 1.10b")
+i=50
+plt.plot(diff_nu_t[i,:], y2d[i,:],'r-')
+plt.plot(np.zeros((nj)), y2d[i,:],'k-')
+plt.xlabel('Difference nu_t vs limiter')
+plt.ylabel('y/H')
+plt.title('1.10) (x = 1.07) vertical line', fontsize=20)
+#plt.axis([np.min(diff_nu_t), np.max(diff_nu_t), 0, 1])
+plt.tight_layout() 
+
+fig103 = plt.figure("Figure 10c")
+plt.contourf(x2d,y2d, diff_nu_t, 50, levels = np.linspace(0, 0.90*np.max(vist_RANS_2d - limiter), 20))
 plt.xlabel("$x$")
 plt.ylabel("$y$")
 plt.title("Diff")
