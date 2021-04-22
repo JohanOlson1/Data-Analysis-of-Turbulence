@@ -87,8 +87,13 @@ k_RANS_2d[:,-1]= 1e-10
 vist_RANS_2d[:,-1]= nu
 
 # set Neumann of p at upper and lower boundaries
-p2d[:,1]=p2d[:,2]
+p2d[:,0]=p2d[:,1]
 p2d[:,-1]=p2d[:,-1-1]
+
+# Set Neumann u2d at upper
+u2d[:,-1]=u2d[:,-2]
+
+uu2d[:,-1] = uu2d[:,-2]
 
 # x and y are of the cell centers. The dphidx_dy routine needs the face coordinate, xf2d, yf2d
 # load them
@@ -238,7 +243,7 @@ plt.plot(duudx[i,:],y2d[i,:],'m-',   label='5')
 plt.plot(-nu*du2dy2[i,:],y2d[i,:],'k-',label='6')
 plt.plot(duvdy[i,:],y2d[i,:],'c-',   label='7')
 plt.xlabel('Term size $v_x$-direction (Eq. R.1)')
-plt.ylabel('y/H')
+plt.ylabel('y')
 plt.title('1.2 (x = 0.10) vertical line', fontsize=20)
 plt.axis([-0.2, 0.2, 0, 1])
 plt.legend()
@@ -253,7 +258,7 @@ plt.plot(duvdx[i,:],y2d[i,:],'m-',   label='5')
 plt.plot(-nu*dv2dy2[i,:],y2d[i,:],'k-',label='6')
 plt.plot(dvvdy[i,:],y2d[i,:],'c-',   label='7')
 plt.xlabel('Term size $v_y$-direction (Eq. R.1)')
-plt.ylabel('y/H')
+plt.ylabel('y')
 plt.title('1.2 (x = 0.10) vertical line', fontsize=20)
 plt.axis([-0.1, 0.1, 0, 1])
 plt.legend()
@@ -271,9 +276,9 @@ plt.plot(duudx[i,:],y2d[i,:],'m-',   label='5')
 plt.plot(-nu*du2dy2[i,:],y2d[i,:],'k-',label='6')
 plt.plot(duvdy[i,:],y2d[i,:],'c-',   label='7')
 plt.xlabel('Term size $v_x$-direction (Eq. R.1)')
-plt.ylabel('y/H')
+plt.ylabel('y')
 plt.title('1.2 (x = 1.07) vertical line', fontsize=20)
-plt.axis([-0.25, 0.1, 0, 1])
+plt.axis([-0.25, 0.25, np.min(y2d), 1])
 plt.legend()
 plt.tight_layout()
 # y-dir
@@ -286,9 +291,9 @@ plt.plot(duvdx[i,:],y2d[i,:],'m-',   label='5')
 plt.plot(-nu*dv2dy2[i,:],y2d[i,:],'k-',label='6')
 plt.plot(dvvdy[i,:],y2d[i,:],'c-',   label='7')
 plt.xlabel('Term size (Eq. R.1)')
-plt.ylabel('y/H')
+plt.ylabel('y')
 plt.title('1.2 $v_y$-direction (x = 1.07) vertical line', fontsize=20)
-plt.axis([-0.11, 0.15, 0, 1])
+plt.axis([-0.45, 0.28, np.min(y2d), 1])
 plt.legend()
 plt.tight_layout()
 
@@ -306,7 +311,7 @@ plt.plot(duvdy[i,:],y2d[i,:],'c-',   label='7')
 plt.xlabel('Term size (Eq. R.1)')
 plt.ylabel('y/H')
 plt.title('1.2 $v_x$-direction (x = 1.07) vertical line', fontsize=20)
-plt.axis([-0.1, 0.1, 0, 0.01])
+plt.axis([-0.3, 0.25, np.min(y2d), 0.1])
 plt.legend()
 plt.tight_layout()
 # y-dir
@@ -321,7 +326,7 @@ plt.plot(dvvdy[i,:],y2d[i,:],'c-',   label='7')
 plt.xlabel('Term size $v_y$-direction (Eq. R.1)')
 plt.ylabel('y/H')
 plt.title('1.2 (x = 1.07) vertical line', fontsize=20)
-plt.axis([-0.11, 0.15, 0, 0.01])
+plt.axis([-0.45, 0.28, np.min(y2d), 0.1])
 plt.legend()
 plt.tight_layout()
 
@@ -377,14 +382,19 @@ k=10# plot every
 plt.quiver(x2d[::k,::k], y2d[::k,::k], F_S_x_norm[::k,::k], F_S_y_norm[::k,::k], width = 0.007, scale=13)
 plt.plot(x2d[:,0],y2d[:,0], 'k-')
 plt.xlabel("$x$"); plt.ylabel("$y$")
-plt.title("1.4) Zoom in, Normal Stresses Vector Plot", fontsize=20)
+plt.title("1.4) Zoom in, Shear Stress Vector Plot", fontsize=20)
 plt.axis([0, 2, -0.3, 0.2])
 plt.tight_layout()
+
+
+dp_norm = np.sqrt(np.multiply(dpdx,dpdx) + np.multiply(dpdy,dpdy))
+dpdx[:,0] = np.divide(dpdx[:,0], dp_norm[:,0])
+dpdy[:,0] = np.divide(dpdy[:,0], dp_norm[:,0])
 
 # Pressure
 fig43 = plt.figure("Figure 1.4c")
 k=10# plot every
-plt.quiver(x2d[::k,::k], y2d[::k,::k], dpdx[::k,::k], dpdy[::k,::k], width = 0.007, scale=95)
+plt.quiver(x2d[::k,::k], y2d[::k,::k], dpdx[::k,::k], dpdy[::k,::k], width = 0.007, scale=10)
 plt.plot(x2d[:,0],y2d[:,0], 'k-')
 plt.xlabel("$x$"); plt.ylabel("$y$")
 plt.title("1.4) Pressure Gradient Vector Plot", fontsize=20)
@@ -449,7 +459,7 @@ plt.plot(P_k[i,:,4],y2d[i,:],'k-',label='Total')
 plt.xlabel('Turbulent Energy Production')
 plt.ylabel('y/H')
 plt.title('1.5) x = 1.07 vertical line', fontsize=20)
-plt.axis([-0.03, 0.045, 0, 1])
+plt.axis([-0.03, 0.045, np.min(y2d), 1])
 plt.legend()
 plt.tight_layout()
 
@@ -461,7 +471,7 @@ i=5
 plt.plot(P_k[i,:,4],y2d[i,:],'y-',label='Production')
 plt.plot(diss_RANS_2d[i,:],y2d[i,:],'k-',label='Dissipation')
 plt.xlabel('Turbulent Energy')
-plt.ylabel('y/H')
+plt.ylabel('y')
 plt.title('1.6) x = 0.10 vertical line', fontsize=20)
 plt.axis([-0.05, 0.05, 0, 1])
 plt.legend()
@@ -473,9 +483,9 @@ i=50
 plt.plot(P_k[i,:,4],y2d[i,:],'y-',label='Production')
 plt.plot(diss_RANS_2d[i,:],y2d[i,:],'k-',label='Dissipation')
 plt.xlabel('Turbulent Energy')
-plt.ylabel('y/H')
+plt.ylabel('y')
 plt.title('1.6) x = 1.07 vertical line', fontsize=20)
-plt.axis([-0.05, 0.05, 0, 1])
+plt.axis([-0.05, 0.05, np.min(y2d), 1])
 plt.legend()
 plt.tight_layout()
 
@@ -542,7 +552,7 @@ Phi12  = Phi121 + Phi122
 Phi22  = Phi221 + Phi222
 
 ## Turbulent Diffusion
-#nu_t = Cmu*np.divide(np.multiply(k_RANS_2d, vist_RANS_2d), diss_RANS_2d)
+nu_t = Cmu*np.divide(np.multiply(k_RANS_2d, vist_RANS_2d), diss_RANS_2d)
 # 11 
 D111, empty = dphidx_dy(xf2d,yf2d, np.multiply(vist_RANS_2d/sigma_k, duudx))
 empty, D112 = dphidx_dy(xf2d,yf2d, np.multiply(vist_RANS_2d/sigma_k, duudy))
@@ -616,7 +626,7 @@ plt.plot(D11t[i,:],y2d[i,:],'m-',   label='5')
 plt.plot(-Eps11[i,:],y2d[i,:],'k-',label='6')
 plt.plot(Total_Stress11[i,:],y2d[i,:],'c-',label='7')
 plt.xlabel('Reynold Stress terms 11')
-plt.ylabel('y/H')
+plt.ylabel('y')
 plt.title('1.7 (x = 0.10) vertical line', fontsize=20)
 plt.axis([-0.03, 0.03, 0, 1])
 plt.legend()
@@ -633,7 +643,7 @@ plt.plot(D12t[i,:],y2d[i,:],'m-',   label='5')
 plt.plot(-Eps12[i,:],y2d[i,:],'k-',label='6')
 plt.plot(Total_Stress12[i,:],y2d[i,:],'c-',label='7')
 plt.xlabel('Reynold Stress Terms 12')
-plt.ylabel('y/H')
+plt.ylabel('y')
 plt.title('1.7 (x = 0.10) vertical line', fontsize=20)
 plt.axis([-0.06, 0.06, 0, 1])
 plt.legend()
@@ -650,22 +660,22 @@ plt.plot(D22t[i,:],y2d[i,:],'m-',   label='5')
 plt.plot(-Eps22[i,:],y2d[i,:],'k-',label='6')
 plt.plot(Total_Stress22[i,:],y2d[i,:],'c-',label='7')
 plt.xlabel('Reynold Stress terms 22')
-plt.ylabel('y/H')
+plt.ylabel('y')
 plt.title('1.7 (x = 0.10) vertical line', fontsize=20)
 plt.axis([-0.01, 0.02, 0, 1])
 plt.legend()
 plt.tight_layout()
 
 # ---- A_1.8)
-Bouss11 = np.multiply(-vist_RANS_2d, 2*dudx) + (2/3)*k_RANS_2d
-Bouss12 = np.multiply(-vist_RANS_2d, (dudy + dvdx))
-Bouss22 = np.multiply(-vist_RANS_2d, 2*dvdy) + (2/3)*k_RANS_2d
+Bouss11 = np.multiply(-nu_t, 2*dudx) + (2/3)*k_RANS_2d
+Bouss12 = np.multiply(-nu_t, (dudy + dvdx))
+Bouss22 = np.multiply(-nu_t, 2*dvdy) + (2/3)*k_RANS_2d
 
 fig81 = plt.figure("1.8a")
 plt.contourf(x2d,y2d, Bouss11, 50, levels = np.linspace(np.min(uv2d), np.max(uu2d), 50))
 plt.xlabel('$x$')
 plt.ylabel("$y$")
-plt.title("Bouss11 Approx.")
+plt.title("Bouss Approx. uu")
 plt.colorbar()
 plt.tight_layout()
 
@@ -673,7 +683,7 @@ fig82 = plt.figure("1.8b")
 plt.contourf(x2d,y2d, Bouss12, 50, levels = np.linspace(np.min(uv2d), np.max(uu2d), 50))
 plt.xlabel('$x$')
 plt.ylabel("$y$")
-plt.title("Bouss12 Approx.")
+plt.title("Bouss Approx. uv")
 plt.colorbar()
 plt.tight_layout()
 
@@ -681,7 +691,7 @@ fig83 = plt.figure("1.8c")
 plt.contourf(x2d,y2d, Bouss22, 50, levels = np.linspace(np.min(uv2d), np.max(uu2d), 50))
 plt.xlabel('$x$')
 plt.ylabel("$y$")
-plt.title("Bouss22 Approx.")
+plt.title("Bouss Approx. vv")
 plt.colorbar()
 plt.tight_layout()
 
@@ -727,7 +737,8 @@ for i in range(ni):
 limiter = np.divide(k_RANS_2d, 3*np.abs(Eigenvalues[:,:,0])) # numerically
 limiter = np.multiply(np.sqrt(2*np.divide(1,np.multiply(s11,s11))),k_RANS_2d/3) # algebraic
 
-diff_nu_t = vist_RANS_2d - limiter
+#diff_nu_t = vist_RANS_2d - limiter
+diff_nu_t = nu_t - limiter
 
 fig101 = plt.figure("Figure 1.10a")
 i=5
