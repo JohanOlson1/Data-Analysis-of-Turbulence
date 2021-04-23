@@ -388,22 +388,23 @@ plt.tight_layout()
 
 
 dp_norm = np.sqrt(np.multiply(dpdx,dpdx) + np.multiply(dpdy,dpdy))
-dpdx[:,0] = np.divide(dpdx[:,0], dp_norm[:,0])
-dpdy[:,0] = np.divide(dpdy[:,0], dp_norm[:,0])
+#dpdx[:,0] = np.divide(dpdx[:,0], dp_norm[:,0])
+#dpdy[:,0] = np.divide(dpdy[:,0], dp_norm[:,0])
 
 # Pressure
 fig43 = plt.figure("Figure 1.4c")
 k=10# plot every
-plt.quiver(x2d[::k,::k], y2d[::k,::k], dpdx[::k,::k], dpdy[::k,::k], width = 0.007, scale=10)
+plt.quiver(x2d[::k,::k], y2d[::k,::k], -dpdx[::k,::k], -dpdy[::k,::k], width = 0.007)
 plt.plot(x2d[:,0],y2d[:,0], 'k-')
 plt.xlabel("$x$"); plt.ylabel("$y$")
 plt.title("1.4) Pressure Gradient Vector Plot", fontsize=20)
+plt.axis([0, 2, -0.3, 0.2])
 plt.tight_layout()
 
 # Viscous x
 fig44 = plt.figure("Figure 1.4d")
-k=10# plot every
-plt.quiver(x2d[::k,::k], y2d[::k,::k], nu*du2dx2[::k,::k], nu*du2dy2[::k,::k], width = 0.007, scale=1)
+k=20# plot every
+plt.quiver(x2d[::k,::k], y2d[::k,::k], nu*du2dx2[::k,::k], nu*dv2dx2[::k,::k], width = 0.005, scale = 0.05)
 plt.plot(x2d[:,0],y2d[:,0], 'k-')
 plt.xlabel("$x$"); plt.ylabel("$y$")
 plt.title("1.4) Viscous Diffusion x", fontsize=20)
@@ -411,15 +412,12 @@ plt.tight_layout()
 
 # Viscous y
 fig45 = plt.figure("Figure 1.4e")
-k=10# plot every
-plt.quiver(x2d[::k,::k], y2d[::k,::k], nu*dv2dx2[::k,::k], nu*dv2dy2[::k,::k], width = 0.007, scale=0.1)
+k=20# plot every
+plt.quiver(x2d[::k,::k], y2d[::k,::k], nu*du2dy2[::k,::k], nu*dv2dy2[::k,::k], width = 0.005, scale = 1)
 plt.plot(x2d[:,0],y2d[:,0], 'k-')
 plt.xlabel("$x$"); plt.ylabel("$y$")
 plt.title("1.4) Viscous Diffusion y", fontsize=20)
 plt.tight_layout()
-
-plt.show()
-plt.close('all')
 
 # ---- A_1.5)
 
