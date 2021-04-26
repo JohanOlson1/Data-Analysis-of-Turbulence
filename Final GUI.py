@@ -590,7 +590,7 @@ Phi12  = Phi121 + Phi122
 Phi22  = Phi221 + Phi222
 
 ## Turbulent Diffusion
-nu_t = Cmu*np.divide(np.multiply(k_RANS_2d, vist_RANS_2d), diss_RANS_2d)
+nu_t = Cmu*np.divide(np.multiply(k_RANS_2d, k_RANS_2d), diss_RANS_2d)
 # 11 
 D111, empty = dphidx_dy(xf2d,yf2d, np.multiply(vist_RANS_2d/sigma_k, duudx))
 empty, D112 = dphidx_dy(xf2d,yf2d, np.multiply(vist_RANS_2d/sigma_k, duudy))
@@ -640,12 +640,12 @@ K1 = np.multiply(f, C1w*np.divide(diss_RANS_2d, k_RANS_2d))
 K2 = C2w*f
 
 Phi111W = K1*( - 2*np.multiply(uu2d,n1n1) - np.multiply(uv2d,n1n2) + np.multiply(vv2d,n2n2))
-Phi112W = K2*( -2*np.multiply(Phi112, n1n1) - np.multiply(Phi122, n1n2) + np.multiply(Phi222,n2n2))
+Phi112W = K2*( - 2*np.multiply(Phi112, n1n1) - np.multiply(Phi122, n1n2) + np.multiply(Phi222,n2n2))
 Phi121W = -1.5*K1*(2*np.multiply(k_RANS_2d, n1n1) + np.multiply(uv2d, n1n1 + n2n2))
 Phi122W = -1.5*K2*(np.multiply(n1n2, Phi112 + Phi222) + np.multiply(Phi122, n1n1+n2n2))
 
-Phi11  += Phi111W + Phi112W
-Phi12  += Phi121W + Phi122W
+#Phi11  += Phi111W + Phi112W
+#Phi12  += Phi121W + Phi122W
 
 # Total
 
@@ -738,6 +738,36 @@ def plot_8c():
     plt.title("Bouss Approx. vv")
     plt.colorbar()
     plt.tight_layout()
+    
+def plot_8a_zoom():
+    plt.figure("1.8a")
+    plt.contourf(x2d,y2d, Bouss11, 50, levels = np.linspace(np.min(uv2d), np.max(uu2d), 50))
+    plt.xlabel('$x$')
+    plt.ylabel("$y$")
+    plt.title("Bouss Approx. uu")
+    plt.axis([0, 3, -0.15, 0.2])
+    plt.colorbar()
+    plt.tight_layout()
+
+def plot_8b_zoom():    
+    plt.figure("1.8b")
+    plt.contourf(x2d,y2d, Bouss12, 50, levels = np.linspace(np.min(uv2d), np.max(uu2d), 50))
+    plt.xlabel('$x$')
+    plt.ylabel("$y$")
+    plt.title("Bouss Approx. uv")
+    plt.axis([0, 3, -0.15, 0.2])
+    plt.colorbar()
+    plt.tight_layout()
+
+def plot_8c_zoom():
+    plt.figure("1.8c")
+    plt.contourf(x2d,y2d, Bouss22, 50, levels = np.linspace(np.min(uv2d), np.max(uu2d), 50))
+    plt.xlabel('$x$')
+    plt.ylabel("$y$")
+    plt.title("Bouss Approx. vv")
+    plt.axis([0, 3, -0.15, 0.2])
+    plt.colorbar()
+    plt.tight_layout()
 
 # ---- A_1.9)
 P_tot = P11 + P22
@@ -774,6 +804,8 @@ s12 = 0.5*(dudy + dvdx)
 s21 = 0.5*(dudy + dvdx)
 s22 = 0.5*(dvdy + dvdy)
 
+s_tot = np.multiply(s11,s11) + np.multiply(s12,s12) + np.multiply(s21,s21) + np.multiply(s22,s22)
+
 for i in range(ni):
     for j in range(nj):
         S = np.array([[s11[i,j], s12[i,j]], [s21[i,j], s22[i,j]]])
@@ -782,7 +814,7 @@ for i in range(ni):
         Eigenvalues[i,j,1] = eigs[1] 
         
 limiter = np.divide(k_RANS_2d, 3*np.abs(Eigenvalues[:,:,0])) # numerically
-limiter = np.multiply(np.sqrt(2*np.divide(1,np.multiply(s11,s11))),k_RANS_2d/3) # algebraic
+limiter = np.multiply(np.sqrt(2*np.divide(1,s_tot)),k_RANS_2d/3) # algebraic
 
 #diff_nu_t = vist_RANS_2d - limiter
 diff_nu_t = nu_t - limiter
@@ -793,7 +825,7 @@ def plot_10a():
     plt.plot(diff_nu_t[i,:], y2d[i,:],'r-')
     plt.plot(np.zeros((nj)), y2d[i,:],'k-')
     plt.xlabel('Difference nu_t vs limiter')
-    plt.ylabel('y/H')
+    plt.ylabel('y')
     plt.title('1.10) (x = 0.10) vertical line', fontsize=20)
     #plt.axis([np.min(diff_nu_t), np.max(diff_nu_t), 0, 1])
     plt.tight_layout()    
@@ -804,17 +836,28 @@ def plot_10b():
     plt.plot(diff_nu_t[i,:], y2d[i,:],'r-')
     plt.plot(np.zeros((nj)), y2d[i,:],'k-')
     plt.xlabel('Difference nu_t vs limiter')
-    plt.ylabel('y/H')
+    plt.ylabel('y')
     plt.title('1.10) (x = 1.07) vertical line', fontsize=20)
     #plt.axis([np.min(diff_nu_t), np.max(diff_nu_t), 0, 1])
     plt.tight_layout() 
     
 def plot_10c():
     plt.figure("Figure 10c")
-    plt.contourf(x2d,y2d, diff_nu_t, 50, levels = np.linspace(0, 0.90*np.max(vist_RANS_2d - limiter), 20))
+    plt.contourf(x2d,y2d, diff_nu_t, 50, levels = np.linspace(0, np.max(diff_nu_t), 50))
     plt.xlabel("$x$")
     plt.ylabel("$y$")
+    plt.plot(x2d[:,0],y2d[:,0], 'k-')
     plt.title("Diff")
+    plt.colorbar()   
+    
+def plot_10d():
+    plt.figure("Figure 10d")
+    plt.contourf(x2d,y2d, nu_t, 50)
+    plt.xlabel("$x$")
+    plt.ylabel("$y$")
+    plt.plot(x2d[:,0],y2d[:,0], 'k-')
+    plt.title("Nu_t")
+    plt.axis([0, np.max(x2d), -0.15, 0.1])
     plt.colorbar()   
 
 
@@ -836,7 +879,7 @@ button1.grid(row=1, column=1, sticky='nesw')
 button2 = tk.Button(root, text='Pressure Plot', command = plot_pressure)
 button2.grid(row=2, column=1, sticky='nesw')
 
-button3 = tk.Button(root, text='k Plot', command = plot_pressure)
+button3 = tk.Button(root, text='k Plot', command = plot_k)
 button3.grid(row=3, column=1, sticky='nesw')
 
 button4 = tk.Button(root, text='uu Plot', command = plot_uu_stress)
@@ -959,6 +1002,15 @@ button30.grid(row=2, column=9, sticky='nesw')
 button31 = tk.Button(root, text='Bouss 22', command = plot_8c)
 button31.grid(row=3, column=9, sticky='nesw')
 
+button29a = tk.Button(root, text='Bouss 11 zoom', command = plot_8a_zoom)
+button29a.grid(row=4, column=9, sticky='nesw')
+
+button30b = tk.Button(root, text='Bouss 12 zoom', command = plot_8b_zoom)
+button30b.grid(row=5, column=9, sticky='nesw')
+
+button31c = tk.Button(root, text='Bouss 22 zoom', command = plot_8c_zoom)
+button31c.grid(row=6, column=9, sticky='nesw')
+
 # 1.9
 
 label10 = tk.Label(text="1.9", background="yellow")
@@ -987,6 +1039,9 @@ button36.grid(row=2, column=11, sticky='nesw')
 
 button37 = tk.Button(root, text='Positive diff', command = plot_10c)
 button37.grid(row=3, column=11, sticky='nesw')
+
+button38 = tk.Button(root, text='nu_t', command = plot_10d)
+button38.grid(row=4, column=11, sticky='nesw')
 
 root.mainloop()
 
