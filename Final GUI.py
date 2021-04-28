@@ -125,13 +125,23 @@ dvdx, dvdy = dphidx_dy(xf2d,yf2d,v2d)
 
 # ---- Plots 
 ################################ Velocity Field
-def plot_velocity_field():
-    plt.figure("Figure velocity")
-    k=10    # plot every tenth
-    plt.quiver(x2d[::k,::k],y2d[::k,::k],u2d[::k,::k],v2d[::k,::k],width=0.005)
+def plot_velocity_field_x():
+    plt.figure("Figure velocity x")
+    plt.contourf(x2d,y2d,u2d, 50)
+    plt.plot(x2d[:,0],y2d[:,0], 'k-')
     plt.xlabel("$x$"); plt.ylabel("$y$")
-    plt.title("vector plot")
-    plt.colorbar()
+    plt.title("Contour plot v_x")
+    plt.colorbar()    
+    plt.tight_layout()        
+    plt.show() 
+    
+def plot_velocity_field_y():
+    plt.figure("Figure velocity y")
+    plt.contourf(x2d,y2d,v2d, 50)
+    plt.plot(x2d[:,0],y2d[:,0], 'k-')
+    plt.xlabel("$x$"); plt.ylabel("$y$")
+    plt.title("Contour plot v_y")
+    plt.colorbar()    
     plt.tight_layout()        
     plt.show() 
 
@@ -224,7 +234,8 @@ def plot_1_turb():
     plt.show() 
 
 # ---- A_1.2) 
-# Eq. (R.1)
+# Calculations for the terms in Eq. (R.1)
+
 # Convection Terms 
 du_udx, du_udy = dphidx_dy(xf2d,yf2d, np.multiply(u2d,u2d))
 du_vdx, du_vdy = dphidx_dy(xf2d,yf2d, np.multiply(u2d,v2d))
@@ -247,7 +258,7 @@ duudx,  duudy  = dphidx_dy(xf2d,yf2d, uu2d)
 duvdx,  duvdy  = dphidx_dy(xf2d,yf2d, uv2d)
 dvvdx,  dvvdy  = dphidx_dy(xf2d,yf2d, vv2d)
 
-    ## Close to inlet
+## Close to inlet
     # x-dir
 def plot_2_close_x():
     plt.figure("Figure 1.2a")
@@ -284,7 +295,7 @@ def plot_2_close_y():
     plt.legend()
     plt.tight_layout()
     
-    ## Turbulent Region
+## Turbulent Region
     # x-dir
 def plot_2_turb_x():    
     plt.figure("Figure 1.2c")
@@ -321,7 +332,7 @@ def plot_2_turb_y():
     plt.legend()
     plt.tight_layout()
     
-    ## Zoom in; Turbulent Region
+## Zoom in; Turbulent Region
     # x-dir
 def plot_2_turb_x_zoom():
     plt.figure("Figure 1.2e")
@@ -333,9 +344,9 @@ def plot_2_turb_x_zoom():
     plt.plot(duudx[i,:],y2d[i,:],'m-',   label='5')
     plt.plot(-nu*du2dy2[i,:],y2d[i,:],'k-',label='6')
     plt.plot(duvdy[i,:],y2d[i,:],'c-',   label='7')
-    plt.xlabel('Term size (Eq. R.1)')
+    plt.xlabel('Term size $v_x$-direction (Eq. R.1)')
     plt.ylabel('y')
-    plt.title('1.2 $v_x$-direction (x = 1.07) vertical line', fontsize=20)
+    plt.title('1.2 (x = 1.07) vertical line', fontsize=20)
     plt.axis([-0.3, 0.25, np.min(y2d), 0.1])
     plt.legend()
     plt.tight_layout()
@@ -360,7 +371,8 @@ def plot_2_turb_y_zoom():
 
 # ---- A_1.3)
 
-# Last part, part of next Question
+# Calculation of stress forces in 1.3 and 1.4
+
 F_N = np.zeros((ni,nj,2))
 F_S = np.zeros((ni,nj,2))
 
@@ -418,11 +430,6 @@ def plot_4_shear_stress_zoom():
     plt.title("1.4) Zoom in, Shear Stress Vector Plot", fontsize=20)
     plt.axis([0, 2, -0.3, 0.2])
     plt.tight_layout()
-
-
-dp_norm = np.sqrt(np.multiply(dpdx,dpdx) + np.multiply(dpdy,dpdy))
-#dpdx[:,0] = np.divide(dpdx[:,0], dp_norm[:,0])
-#dpdy[:,0] = np.divide(dpdy[:,0], dp_norm[:,0])
     
     # Pressure
 def plot_4_pressure_grad():    
@@ -664,7 +671,7 @@ def plot_7_close_11():
     plt.plot(D11t[i,:],y2d[i,:],'m-',   label='5')
     plt.plot(-Eps11[i,:],y2d[i,:],'k-',label='6')
     plt.plot(Total_Stress11[i,:],y2d[i,:],'k--',label='7')
-    plt.xlabel('Reynold Stress terms 11')
+    plt.xlabel('Reynold Stress term $\overline{u^\prime u^\prime}$')
     plt.ylabel('y')
     plt.title('1.7 (x = 0.10) vertical line', fontsize=20)
     plt.axis([-0.03, 0.03, 0, 1])
@@ -683,7 +690,7 @@ def plot_7_close_12():
     plt.plot(D12t[i,:],y2d[i,:],'m-',   label='5')
     plt.plot(-Eps12[i,:],y2d[i,:],'k-',label='6')
     plt.plot(Total_Stress12[i,:],y2d[i,:],'k--',label='7')
-    plt.xlabel('Reynold Stress Terms 12')
+    plt.xlabel('Reynold Stress Terms $\overline{u^\prime v^\prime}$')
     plt.ylabel('y')
     plt.title('1.7 (x = 0.10) vertical line', fontsize=20)
     plt.axis([-0.01, 0.01, 0, 1])
@@ -722,6 +729,7 @@ def Check_Plot():
     plt.tight_layout()
 
 # ---- A_1.8)
+# Calculated stresses using boussinesq assumption
 Bouss11 = np.multiply(-nu_t, 2*dudx) + (2/3)*k_RANS_2d
 Bouss12 = np.multiply(-nu_t, (dudy + dvdx))
 Bouss22 = np.multiply(-nu_t, 2*dvdy) + (2/3)*k_RANS_2d
@@ -731,7 +739,7 @@ def plot_8a():
     plt.contourf(x2d,y2d, Bouss11, 50, levels = np.linspace(np.min(uv2d), np.max(uu2d), 50))
     plt.xlabel('$x$')
     plt.ylabel("$y$")
-    plt.title("Bouss Approx. uu")
+    plt.title("1.8) Boussinesq Approx. uu")
     plt.colorbar()
     plt.tight_layout()
 
@@ -740,7 +748,7 @@ def plot_8b():
     plt.contourf(x2d,y2d, Bouss12, 50, levels = np.linspace(np.min(uv2d), np.max(uu2d), 50))
     plt.xlabel('$x$')
     plt.ylabel("$y$")
-    plt.title("Bouss Approx. uv")
+    plt.title("1.8) Boussinesq Approx. uv")
     plt.colorbar()
     plt.tight_layout()
 
@@ -749,7 +757,7 @@ def plot_8c():
     plt.contourf(x2d,y2d, Bouss22, 50, levels = np.linspace(np.min(uv2d), np.max(uu2d), 50))
     plt.xlabel('$x$')
     plt.ylabel("$y$")
-    plt.title("Bouss Approx. vv")
+    plt.title("1.8) Boussinesq Approx. vv")
     plt.colorbar()
     plt.tight_layout()
     
@@ -758,7 +766,7 @@ def plot_8a_zoom():
     plt.contourf(x2d,y2d, Bouss11, 50, levels = np.linspace(np.min(uv2d), np.max(uu2d), 50))
     plt.xlabel('$x$')
     plt.ylabel("$y$")
-    plt.title("Bouss Approx. uu")
+    plt.title("1.8) Boussinesq Approx. uu")
     plt.axis([0, 3, -0.15, 0.2])
     plt.colorbar()
     plt.tight_layout()
@@ -768,7 +776,7 @@ def plot_8b_zoom():
     plt.contourf(x2d,y2d, Bouss12, 50, levels = np.linspace(np.min(uv2d), np.max(uu2d), 50))
     plt.xlabel('$x$')
     plt.ylabel("$y$")
-    plt.title("Bouss Approx. uv")
+    plt.title("1.8) Boussinesq Approx. uv")
     plt.axis([0, 3, -0.15, 0.2])
     plt.colorbar()
     plt.tight_layout()
@@ -778,26 +786,25 @@ def plot_8c_zoom():
     plt.contourf(x2d,y2d, Bouss22, 50, levels = np.linspace(np.min(uv2d), np.max(uu2d), 50))
     plt.xlabel('$x$')
     plt.ylabel("$y$")
-    plt.title("Bouss Approx. vv")
+    plt.title("1.8) Boussinesq Approx. vv")
     plt.axis([0, 3, -0.15, 0.2])
     plt.colorbar()
     plt.tight_layout()
 
 # ---- A_1.9)
-P_tot = P11 + P22
     
 def plot_9a():
     plt.figure("Figure 1.9a")
     plt.contourf(x2d,y2d, P_k[:,:,4], 50)
     plt.xlabel("$x$"); plt.ylabel("$y$")
-    plt.title("Production")
+    plt.title("1.9) Normal Production")
     plt.colorbar()
 
 def plot_9b():    
     plt.figure("Figure 1.9b")
-    plt.contourf(x2d,y2d, P12, 50)
+    plt.contourf(x2d,y2d, P_k[:,:,5], 50)
     plt.xlabel("$x$"); plt.ylabel("$y$")
-    plt.title("Robin Hood")
+    plt.title("1.9) Shear Production")
     plt.colorbar()
     
 def plot_9c():    
@@ -805,13 +812,11 @@ def plot_9c():
     plt.contourf(x2d,y2d, P_k[:,:,6], 50, levels = np.linspace(np.min(P_k[:,:,6]),0,50))
     plt.plot(x2d[:,0],y2d[:,0], 'k-')
     plt.xlabel("$x$"); plt.ylabel("$y$")
-    plt.title("Negative Production")
+    plt.title("1.9) Total Negative Production")
     plt.colorbar()
 
 # ---- A_1.10)
 Eigenvalues = np.zeros((ni,nj,2))
-
-BigSMatrix = np.zeros((ni,nj,2,2))
 
 s11 = 0.5*(dudx + dudx)
 s12 = 0.5*(dudy + dvdx)
@@ -830,7 +835,7 @@ for i in range(ni):
 limiter = np.divide(k_RANS_2d, 3*np.abs(Eigenvalues[:,:,0])) # numerically
 limiter = np.multiply(np.sqrt(2*np.divide(1,s_tot)),k_RANS_2d/3) # algebraic
 
-#diff_nu_t = vist_RANS_2d - limiter
+#diff_nu_t = vist_RANS_2d - limiter # given data for nu_t
 diff_nu_t = nu_t - limiter
 
 def plot_10a():    
@@ -838,10 +843,9 @@ def plot_10a():
     i=5
     plt.plot(diff_nu_t[i,:], y2d[i,:],'r-')
     plt.plot(np.zeros((nj)), y2d[i,:],'k-')
-    plt.xlabel('Difference nu_t vs limiter')
+    plt.xlabel('Difference $\\nu_t$ vs limiter')
     plt.ylabel('y')
     plt.title('1.10) (x = 0.10) vertical line', fontsize=20)
-    #plt.axis([np.min(diff_nu_t), np.max(diff_nu_t), 0, 1])
     plt.tight_layout()    
 
 def plot_10b():
@@ -849,10 +853,9 @@ def plot_10b():
     i=50
     plt.plot(diff_nu_t[i,:], y2d[i,:],'r-')
     plt.plot(np.zeros((nj)), y2d[i,:],'k-')
-    plt.xlabel('Difference nu_t vs limiter')
+    plt.xlabel('Difference $\\nu_t$ vs limiter')
     plt.ylabel('y')
     plt.title('1.10) (x = 1.07) vertical line', fontsize=20)
-    #plt.axis([np.min(diff_nu_t), np.max(diff_nu_t), 0, 1])
     plt.tight_layout() 
     
 def plot_10c():
@@ -861,7 +864,7 @@ def plot_10c():
     plt.xlabel("$x$")
     plt.ylabel("$y$")
     plt.plot(x2d[:,0],y2d[:,0], 'k-')
-    plt.title("Diff")
+    plt.title("1.10 Limiter Difference")
     plt.colorbar()   
     
 def plot_10d():
@@ -870,7 +873,7 @@ def plot_10d():
     plt.xlabel("$x$")
     plt.ylabel("$y$")
     plt.plot(x2d[:,0],y2d[:,0], 'k-')
-    plt.title("Nu_t")
+    plt.title("$1.10) \\nu_t$")
     plt.axis([0, np.max(x2d), -0.15, 0.1])
     plt.colorbar()   
 
@@ -887,23 +890,26 @@ close_button.grid(row=0, column=0)
 label1 = tk.Label(text="Overview Plots", background="yellow")
 label1.grid(row=0, column=1, sticky='nesw')
 
-button1 = tk.Button(root, text='Velocity Plot', command = plot_velocity_field)
-button1.grid(row=1, column=1, sticky='nesw')
+button1a = tk.Button(root, text='Velocity Plot x', command = plot_velocity_field_x)
+button1a.grid(row=1, column=1, sticky='nesw')
+
+button1b = tk.Button(root, text='Velocity Plot y', command = plot_velocity_field_y)
+button1b.grid(row=2, column=1, sticky='nesw')
 
 button2 = tk.Button(root, text='Pressure Plot', command = plot_pressure)
-button2.grid(row=2, column=1, sticky='nesw')
+button2.grid(row=3, column=1, sticky='nesw')
 
 button3 = tk.Button(root, text='k Plot', command = plot_k)
-button3.grid(row=3, column=1, sticky='nesw')
+button3.grid(row=4, column=1, sticky='nesw')
 
 button4 = tk.Button(root, text='uu Plot', command = plot_uu_stress)
-button4.grid(row=4, column=1, sticky='nesw')
+button4.grid(row=5, column=1, sticky='nesw')
 
 button5 = tk.Button(root, text='vv Plot', command = plot_vv_stress)
-button5.grid(row=5, column=1, sticky='nesw')
+button5.grid(row=6, column=1, sticky='nesw')
 
 button6 = tk.Button(root, text='uv Plot', command = plot_uv_Stress)
-button6.grid(row=6, column=1, sticky='nesw')
+button6.grid(row=7, column=1, sticky='nesw')
 
 # 1.1
 label2 = tk.Label(text="1.1", background="yellow")
