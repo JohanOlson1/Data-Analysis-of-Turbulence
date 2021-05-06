@@ -130,7 +130,7 @@ for i in range (0,40):
    
 # ---- Plot
 
-## U2
+# ---- U2
 def plot_mean_velocity_profile():
     fig1,ax1 = plt.subplots()
     plt.subplots_adjust(left=0.20,bottom=0.20)
@@ -148,7 +148,7 @@ wwmean = np.mean((w3d-wmean[None,:,None])*(w3d-wmean[None,:,None]), axis=(0,2))
 
 te_resolved = 0.5*(uumean + vvmean + wwmean)
 
-## U3
+# ---- U3
 
 def uv_stress_resolved():
     plt.figure("uv_Stress_resolved")
@@ -157,17 +157,18 @@ def uv_stress_resolved():
     plt.ylabel("$U^+$")
     plt.xlabel("$y^+$")
 
-## U4
+# ---- U4
 def te_plot():
     plt.figure("Turbulent Kinetic Energy")
     plt.plot(yplus, temean, label='$k_{modelled}$')
     plt.plot(yplus, te_resolved, label='$k_{resolved}$')
+    plt.plot(yplus, te_resolved + temean, label='$k_{sum}$')
     plt.title('Turbulent Kinetic Energy')
     plt.ylabel("$U^+$")
     plt.xlabel("$y^+$")
     plt.legend()
     
-## U5
+# ---- U5
 Cmu = 0.09
 
 nu_t = Cmu*np.divide(np.multiply(temean, temean), epsmean)
@@ -194,14 +195,36 @@ def turbulent_shear():
     plt.xlabel("$y^+$")
     plt.legend()
     
-## U6
+# ---- U6
 
-# some calc.
+L_t = np.divide(np.power(temean, 3/2), epsmean)
 
-def boundary_interface():
-    plt.figure("boundary interface")
+F_DES = (1/(0.61*dx))*L_t
 
-## U7
+arg1 = 2*np.divide(L_t, y)
+arg2 = 500*viscos*Cmu*np.divide(temean, np.multiply(epsmean,np.power(y, 2)))
+eta = np.maximum(arg1, arg2)
+F_S = np.tanh(np.power(eta,2))
+F_DDES = (1/(0.61*dx))*np.multiply(L_t, 1 - F_S)
+
+def boundary_interface_DES():
+    plt.figure("DES")
+    plt.plot(yplus, F_DES)
+    plt.plot(yplus, np.ones(np.size(yplus)), 'k-')
+    plt.title('DDES $F_{DDES}$')
+    plt.ylabel("f")
+    plt.xlabel("$y^+$")
+    plt.legend()
+
+def boundary_interface_DDES():
+    plt.figure("DDES")
+    plt.plot(yplus, F_DDES)
+    plt.plot(yplus, np.ones(np.size(yplus)), 'k-')
+    plt.title('DDES $F_{DDES}$')
+    plt.ylabel("f")
+    plt.xlabel("$y^+$")
+    plt.legend()
+# ---- U7
 
 kappa = 0.41
 
@@ -223,23 +246,23 @@ T_1_1D = zeta*kappa*np.divide(np.multiply(np.multiply(S_1D,S_1D), L_1D), L_v_K_1
 # 3D
 
 # u
-dudx2, empty1, empty2 = np.gradient(dudx,dx,y,dz)
+dudx2, dudxdy, dudxdz = np.gradient(dudx,dx,y,dz)
 
-empty1, dudy2, empty2 = np.gradient(dudy,dx,y,dz)
+dudydx, dudy2, dudydz = np.gradient(dudy,dx,y,dz)
 
-empty1, empty2, dudz2 = np.gradient(dudz,dx,y,dz)
+dudzdx, dudzdy, dudz2 = np.gradient(dudz,dx,y,dz)
 # v
-dvdx2, empty1, empty2 = np.gradient(dvdx,dx,y,dz)
+dvdx2, dvdxdy, dvdxdz = np.gradient(dvdx,dx,y,dz)
 
-empty1, dvdy2, empty2 = np.gradient(dvdy,dx,y,dz)
+dvdydx, dvdy2, dvdydz = np.gradient(dvdy,dx,y,dz)
 
-empty1, empty2, dvdz2 = np.gradient(dvdz,dx,y,dz)
+dvdzdx, dvdzdy, dvdz2 = np.gradient(dvdz,dx,y,dz)
 # w
-dwdx2, empty1, empty2 = np.gradient(dwdx,dx,y,dz)
+dwdx2, dwdxdy, dwdxdz = np.gradient(dwdx,dx,y,dz)
 
-empty1, dwdy2, empty2 = np.gradient(dwdy,dx,y,dz)
+dwdydx, dwdy2, dwdydz = np.gradient(dwdy,dx,y,dz)
 
-empty1, empty2, dwdz2 = np.gradient(dwdz,dx,y,dz)
+dwdzdx, dwdzdy, dwdz2 = np.gradient(dwdz,dx,y,dz)
 
 # Partials
 Lambda1 = dudx2 + dudy2 + dudz2
@@ -281,15 +304,41 @@ L_v_K_3D = kappa*np.abs(np.divide(S, Ubiss_1))
 
 L = (Cmu**(3/4))*np.multiply(np.power(te3d, 3/2), eps3d)
 
-T_1_3D_1 = zeta*kappa*np.divide(np.multiply(np.multiply(S,S), L), L_v_K_3D) 
+#T_1_3D_1 = zeta*kappa*np.divide(np.multiply(np.multiply(S,S), L), L_v_K_3D) 
+
+# Alternative
+
+Ubiss_2 = np.zeros((ni,nj,nk))
+
+for i in range(ni):
+    for j in range(nj):
+        for k in range(nk):
+            Ubiss_2[i,j,k] += dudx2[i,j,k] + dudxdy[i,j,k] + dudxdz[i,j,k]
+            Ubiss_2[i,j,k] += dudydx[i,j,k] + dudy2[i,j,k] + dudydz[i,j,k]
+            Ubiss_2[i,j,k] += dudzdx[i,j,k] + dudzdy[i,j,k] + dudz2[i,j,k]
+            Ubiss_2[i,j,k] += dvdx2[i,j,k] + dvdxdy[i,j,k] + dvdxdz[i,j,k]
+            Ubiss_2[i,j,k] += dvdydx[i,j,k] + dvdy2[i,j,k] + dvdydz[i,j,k]
+            Ubiss_2[i,j,k] += dvdzdx[i,j,k] + dvdzdy[i,j,k] + dvdz2[i,j,k]
+            Ubiss_2[i,j,k] += dwdx2[i,j,k] + dwdxdy[i,j,k] + dwdxdz[i,j,k]
+            Ubiss_2[i,j,k] += dwdydx[i,j,k] + dwdy2[i,j,k] + dwdydz[i,j,k]
+            Ubiss_2[i,j,k] += dwdzdx[i,j,k] + dwdzdy[i,j,k] + dwdz2[i,j,k]
+            
+for i in range(ni):
+    for j in range(nj):
+        for k in range(nk):
+            S[i,j,k] = np.sqrt(2*S[i,j,k])            
+
+L_v_K_3D_alt = kappa*np.abs(np.divide(S, Ubiss_2))
 
 # Plot
-L_v_K_1D_mean_after = np.mean(L_v_K_3D , axis=(0,2))
+L_v_K_3D_mean = np.mean(L_v_K_3D , axis=(0,2))
+L_v_K_3D_mean_alt = np.mean(L_v_K_3D_alt , axis=(0,2))
 
 def length_scale_compare():
     plt.figure("Length_scale_compare")
-    plt.plot(yplus, L_v_K_1D , label='1D before')
-    plt.plot(yplus, L_v_K_1D_mean_after , label='1D After')
+    plt.plot(yplus, L_v_K_1D , label='1D')
+    plt.plot(yplus, L_v_K_3D_mean , label='3D')
+    plt.plot(yplus, L_v_K_3D_mean_alt , label='3D Alternative')
     plt.title('Length_scale_compare')
     plt.ylabel("Length Scale")
     plt.xlabel("$y^+$")
@@ -338,8 +387,11 @@ button_turbulent_shear.grid(row=1, column=4, sticky='nesw')
 label_overview = tk.Label(text="U6", background="grey")
 label_overview.grid(row=0, column=5, sticky='nesw')
 
-button_boundary_interface = tk.Button(root, text= 'Boundary Interface DDES', command = boundary_interface)
-button_boundary_interface.grid(row=1, column=5, sticky='nesw')
+button_boundary_interface_DES = tk.Button(root, text= 'Boundary Interface DES', command = boundary_interface_DES)
+button_boundary_interface_DES.grid(row=1, column=5, sticky='nesw')
+
+button_boundary_interface_DDES = tk.Button(root, text= 'Boundary Interface DDES', command = boundary_interface_DDES)
+button_boundary_interface_DDES.grid(row=2, column=5, sticky='nesw')
 
 # U7
 label_overview = tk.Label(text="U7", background="grey")

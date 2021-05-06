@@ -142,7 +142,16 @@ node1v1_max=np.max(node1v1)
 # two_max is symmwetric. Pick the right half and normalize
 node1v1_sym_norm=node1v1[nmax_node1v1:]/node1v1_max
 
-int_T_1 = np.trapz(node1v1_sym_norm)*dt
+# Only take the part before the curve goes up
+node1v1_sym_norm_INT = np.zeros(nmax_node1v1)
+nmax_auto_1 = 0
+for i in range(nmax_node1v1):
+    node1v1_sym_norm_INT[i] = node1v1_sym_norm[i]
+    if node1v1_sym_norm[i] < node1v1_sym_norm[i+1]:
+        nmax_auto_1 = i
+        break
+
+int_T_1 = np.trapz(node1v1_sym_norm_INT)*dt
 
 ## node 2 v_1
 u2_fluct=u2-np.mean(u2)
@@ -154,7 +163,17 @@ node2v1_max=np.max(node2v1)
 # two_max is symmwetric. Pick the right half and normalize
 node2v1_sym_norm=node2v1[nmax_node2v1:]/node2v1_max
 
-int_T_2 = np.trapz(node2v1_sym_norm)*dt
+# Only take the part before the curve goes up
+node2v1_sym_norm_INT = np.zeros(nmax_node2v1)
+
+nmax_auto_2 = 0
+for i in range(nmax_node2v1):
+    node2v1_sym_norm_INT[i] = node2v1_sym_norm[i]
+    if node2v1_sym_norm[i] < node2v1_sym_norm[i+1]:
+        nmax_auto_2 = i        
+        break
+
+int_T_2 = np.trapz(node2v1_sym_norm_INT)*dt
 
 #3 node 3 v_1
 u3_fluct=u3-np.mean(u3)
@@ -166,7 +185,17 @@ node3v1_max=np.max(node3v1)
 # two_max is symmwetric. Pick the right half and normalize
 node3v1_sym_norm=node3v1[nmax_node3v1:]/node3v1_max
 
-int_T_3 = np.trapz(node3v1_sym_norm)*dt
+# Only take the part before the curve goes up
+node3v1_sym_norm_INT = np.zeros(nmax_node3v1)
+
+nmax_auto_3 = 0
+for i in range(nmax_node3v1):
+    node3v1_sym_norm_INT[i] = node3v1_sym_norm[i]
+    if node3v1_sym_norm[i] < node3v1_sym_norm[i+1]:
+        nmax_auto_3 = i
+        break
+
+int_T_3 = np.trapz(node3v1_sym_norm_INT)*dt
 
 ## node 4 v_1
 u4_fluct=u4-np.mean(u4)
@@ -178,7 +207,17 @@ node4v1_max=np.max(node4v1)
 # two_max is symmwetric. Pick the right half and normalize
 node4v1_sym_norm=node4v1[nmax_node4v1:]/node4v1_max
 
-int_T_4 = np.trapz(node4v1_sym_norm)*dt
+# Only take the part before the curve goes up
+node4v1_sym_norm_INT = np.zeros(nmax_node4v1)
+
+nmax_auto_4 = 0
+for i in range(nmax_node4v1):
+    node4v1_sym_norm_INT[i] = node4v1_sym_norm[i]
+    if node4v1_sym_norm[i] < node4v1_sym_norm[i+1]:
+        nmax_auto_4 = i
+        break
+
+int_T_4 = np.trapz(node4v1_sym_norm_INT)*dt
 
 # node 5 v_1
 u5_fluct=u5-np.mean(u5)
@@ -190,43 +229,50 @@ node5v1_max=np.max(node5v1)
 # two_max is symmwetric. Pick the right half and normalize
 node5v1_sym_norm=node5v1[nmax_node5v1:]/node5v1_max
 
-int_T_5 = np.trapz(node5v1_sym_norm)*dt
+# Only take the part before the curve goes up
+node5v1_sym_norm_INT = np.zeros(nmax_node5v1)
 
+nmax_auto_5 = 0
+for i in range(nmax_node5v1):
+    node5v1_sym_norm_INT[i] = node5v1_sym_norm[i]
+    if node5v1_sym_norm[i] < node5v1_sym_norm[i+1]:
+        nmax_auto_5 = i
+        break
 
+int_T_5 = np.trapz(node5v1_sym_norm_INT)*dt
 
-imax=500;
 def autocorr_node_1():
     plt.figure("autocorr_node_1")
     plt.title('Autocorrelation Node 1: $v_1$')
-    plt.plot(t[0:imax],node1v1_sym_norm[0:imax],'b-')
+    plt.plot(t[0:nmax_auto_1],node1v1_sym_norm[0:nmax_auto_1],'b-')
     plt.xlabel('t')
     plt.ylabel('$B_{v_1 v_1}$')
     
 def autocorr_node_2():
     plt.figure("autocorr_node_2")
     plt.title('Autocorrelation Node 2: $v_1$')
-    plt.plot(t[0:imax],node2v1_sym_norm[0:imax],'b-')
+    plt.plot(t[0:nmax_auto_2],node2v1_sym_norm[0:nmax_auto_2],'b-')
     plt.xlabel('t')
     plt.ylabel('$B_{v_1 v_1}$')
 
 def autocorr_node_3():
     plt.figure("autocorr_node_3")
-    plt.title('Autocorrelation Node 2: $v_1$')
-    plt.plot(t[0:imax],node3v1_sym_norm[0:imax],'b-')
+    plt.title('Autocorrelation Node 3: $v_1$')
+    plt.plot(t[0:nmax_auto_3],node3v1_sym_norm[0:nmax_auto_3],'b-')
     plt.xlabel('t')
     plt.ylabel('$B_{v_1 v_1}$')
 
 def autocorr_node_4():
     plt.figure("autocorr_node_4")
-    plt.title('Autocorrelation Node 2: $v_1$')
-    plt.plot(t[0:imax],node4v1_sym_norm[0:imax],'b-')
+    plt.title('Autocorrelation Node 4: $v_1$')
+    plt.plot(t[0:nmax_auto_4],node4v1_sym_norm[0:nmax_auto_4],'b-')
     plt.xlabel('t')
     plt.ylabel('$B_{v_1 v_1}$')
 
 def autocorr_node_5():
     plt.figure("autocorr_node_5")
-    plt.title('Autocorrelation Node 2: $v_1$')
-    plt.plot(t[0:imax],node5v1_sym_norm[0:imax],'b-')
+    plt.title('Autocorrelation Node 5: $v_1$')
+    plt.plot(t[0:nmax_auto_5],node5v1_sym_norm[0:nmax_auto_5],'b-')
     plt.xlabel('t')
     plt.ylabel('$B_{v_1 v_1}$')
     
