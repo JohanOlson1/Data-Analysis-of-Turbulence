@@ -21,7 +21,7 @@ nim1=ni-1
 njm1=nj-1
 
 # read data file
-vectz=np.genfromtxt("vectz_aiaa_paper.dat",comments="%")
+vectz=np.genfromtxt("vectz_aiaa_journal.dat",comments="%")
 ntstep=vectz[0]
 n=len(vectz)
 
@@ -89,7 +89,8 @@ x_2d=np.transpose(np.reshape(x,(nj,ni)))
 y_2d=np.transpose(np.reshape(y,(nj,ni)))
 
 # ---- Test
-uv_model-u*v
+# BIG QUESTION
+#uv_model = 2*u*v - u*v_inst -u_inst*v 
 uv_model_2d=np.transpose(np.reshape(uv_model,(nj,ni)))
 
 
@@ -119,12 +120,12 @@ def u065():
     plt.clf() #clear the figure
     xx=0.65;
     i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
-    plt.plot(u_2d[i1,:],y_2d[i1,:]-y_2d[i1,0],'b-')
-    plt.plot(x065_off[:,2],x065_off[:,1]-y_2d[i1,0],'bo')
+    plt.plot(u_2d[i1,:],y_2d[i1,:],'b-')
+    plt.plot(x065_off[:,2],x065_off[:,1],'bo')
     plt.xlabel("$U$")
-    plt.ylabel("$y-y_{wall}$")
+    plt.ylabel("$y$")
     plt.title("$x=0.65$")
-    plt.axis([0, 1.3,0,0.2])
+    plt.axis([0, 1.3, np.min(y_2d[i1,0]), 0.4])
     
 #*************************
 # plot vv
@@ -133,12 +134,12 @@ def vv065():
     plt.clf() #clear the figure
     xx=0.65;
     i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
-    plt.plot(vv_2d[i1,:],y_2d[i1,:]-y_2d[i1,0],'b-')
-    plt.plot(x065_off[:,5],x065_off[:,1]-y_2d[i1,0],'bo')
+    plt.plot(vv_2d[i1,:],y_2d[i1,:],'b-')
+    plt.plot(x065_off[:,5],x065_off[:,1],'bo')
     plt.xlabel("$\overline{v'v'}$")
-    plt.ylabel("$y-y_{wall}$")
+    plt.ylabel("$y$")
     plt.title("$x=0.65$")
-    plt.axis([0, 0.01,0,0.2])
+    plt.axis([0, 0.01, np.min(y_2d[i1,0]), 0.4])
     
 #*************************
 # plot vv
@@ -147,12 +148,12 @@ def vv080():
     plt.clf() #clear the figure
     xx=0.80;
     i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
-    plt.plot(vv_2d[i1,:],y_2d[i1,:]-y_2d[i1,0],'b-')
-    plt.plot(x080_off[:,5],x080_off[:,1]-y_2d[i1,0],'bo')
+    plt.plot(vv_2d[i1,:],y_2d[i1,:],'b-')
+    plt.plot(x080_off[:,5],x080_off[:,1],'bo')
     plt.xlabel("$\overline{v'v'}$")
-    plt.ylabel("$y-y_{wall}$")
+    plt.ylabel("$y$")
     plt.title("$x=0.80$")
-    plt.axis([0, 0.05,0,0.2])
+    plt.axis([0, 0.05, np.min(y_2d[i1,0]), 0.3])
 
 #*************************
 # plot vv
@@ -161,12 +162,12 @@ def vv090():
     plt.clf() #clear the figure
     xx=0.90;
     i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
-    plt.plot(vv_2d[i1,:],y_2d[i1,:]-y_2d[i1,0],'b-')
-    plt.plot(x090_off[:,5],x090_off[:,1]-y_2d[i1,0],'bo')
+    plt.plot(vv_2d[i1,:],y_2d[i1,:],'b-')
+    plt.plot(x090_off[:,5],x090_off[:,1],'bo')
     plt.xlabel("$\overline{v'v'}$")
-    plt.ylabel("$y-y_{wall}$")
+    plt.ylabel("$y$")
     plt.title("$x=0.80$")
-    plt.axis([0, 0.05,0,0.2])
+    plt.axis([0, 0.05,np.min(y_2d[i1,0]),0.3])
     
 #*************************
 # plot vv
@@ -175,12 +176,12 @@ def vv100():
     plt.clf() #clear the figure
     xx=1.00;
     i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
-    plt.plot(vv_2d[i1,:],y_2d[i1,:]-y_2d[i1,0],'b-')
-    plt.plot(x100_off[:,5],x100_off[:,1]-y_2d[i1,0],'bo')
+    plt.plot(vv_2d[i1,:],y_2d[i1,:],'b-')
+    plt.plot(x100_off[:,5],x100_off[:,1],'bo')
     plt.xlabel("$\overline{v'v'}$")
-    plt.ylabel("$y-y_{wall}$")
+    plt.ylabel("$y$")
     plt.title("$x=1.00$")
-    plt.axis([0, 0.05,0,0.2])    
+    plt.axis([0, 0.05,np.min(y_2d[i1,0]),0.3])    
 
 #*************************
 # plot vv
@@ -189,12 +190,12 @@ def vv110():
     plt.clf() #clear the figure
     xx=1.10;
     i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
-    plt.plot(vv_2d[i1,:],y_2d[i1,:]-y_2d[i1,0],'b-')
-    plt.plot(x110_off[:,5],x110_off[:,1]-y_2d[i1,0],'bo')
+    plt.plot(vv_2d[i1,:],y_2d[i1,:],'b-')
+    plt.plot(x110_off[:,5],x110_off[:,1],'bo')
     plt.xlabel("$\overline{v'v'}$")
-    plt.ylabel("$y-y_{wall}$")
+    plt.ylabel("$y$")
     plt.title("$x=1.10$")
-    plt.axis([0, 0.05,0,0.2])    
+    plt.axis([0, 0.05,np.min(y_2d[i1,0]),0.3])    
 
 #*************************
 # plot vv
@@ -203,12 +204,12 @@ def vv120():
     plt.clf() #clear the figure
     xx=1.20;
     i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
-    plt.plot(vv_2d[i1,:],y_2d[i1,:]-y_2d[i1,0],'b-')
-    plt.plot(x120_off[:,5],x120_off[:,1]-y_2d[i1,0],'bo')
+    plt.plot(vv_2d[i1,:],y_2d[i1,:],'b-')
+    plt.plot(x120_off[:,5],x120_off[:,1],'bo')
     plt.xlabel("$\overline{v'v'}$")
-    plt.ylabel("$y-y_{wall}$")
+    plt.ylabel("$y$")
     plt.title("$x=1.20$")
-    plt.axis([0, 0.05,0,0.2])
+    plt.axis([0, 0.05,np.min(y_2d[i1,0]),0.3])
 
 #*************************
 # plot vv
@@ -217,12 +218,12 @@ def vv130():
     plt.clf() #clear the figure
     xx=1.30;
     i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
-    plt.plot(vv_2d[i1,:],y_2d[i1,:]-y_2d[i1,0],'b-')
-    plt.plot(x130_off[:,5],x130_off[:,1]-y_2d[i1,0],'bo')
+    plt.plot(vv_2d[i1,:],y_2d[i1,:],'b-')
+    plt.plot(x130_off[:,5],x130_off[:,1],'bo')
     plt.xlabel("$\overline{v'v'}$")
-    plt.ylabel("$y-y_{wall}$")
+    plt.ylabel("$y$")
     plt.title("$x=1.30$")
-    plt.axis([0, 0.05,0,0.2])    
+    plt.axis([0, 0.05,np.min(y_2d[i1,0]),0.3])    
     
 #*************************
 # plot uv
@@ -231,12 +232,12 @@ def uv065():
     plt.clf() #clear the figure
     xx=0.65;
     i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
-    plt.plot(uv_2d[i1,:],y_2d[i1,:]-y_2d[i1,0],'b-')
-    plt.plot(x065_off[:,6],x065_off[:,1]-y_2d[i1,0],'bo')
+    plt.plot(uv_2d[i1,:],y_2d[i1,:],'b-')
+    plt.plot(x065_off[:,6],x065_off[:,1],'bo')
     plt.xlabel("$\overline{v'v'}$")
-    plt.ylabel("$y-y_{wall}$")
-    plt.title("$x=1.30$")
-    plt.axis([-0.02, 0.02,0,0.2])
+    plt.ylabel("$y$")
+    plt.title("$x=0.65$")
+    plt.axis([-0.02, 0.02,np.min(y_2d[i1,0]),0.3])
     
 #*************************
 # plot uv
@@ -245,14 +246,17 @@ def uv130():
     plt.clf() #clear the figure
     xx=1.30;
     i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
-    plt.plot(uv_2d[i1,:],y_2d[i1,:]-y_2d[i1,0],'b-')
-    plt.plot(x130_off[:,6],x130_off[:,1]-y_2d[i1,0],'bo')
+    plt.plot(uv_2d[i1,:],y_2d[i1,:],'b-')
+    plt.plot(x130_off[:,6],x130_off[:,1],'bo')
     plt.xlabel("$\overline{v'v'}$")
-    plt.ylabel("$y-y_{wall}$")
+    plt.ylabel("$y$")
     plt.title("$x=1.30$")
-    plt.axis([-0.04, 0.02,0,0.2])
+    plt.axis([-0.04, 0.02,np.min(y_2d[i1,0]),0.3])
 
 # ---- V.2
+
+visc_turb = vis_2d - viscos
+    
 
 #*************************
 # plot uv
@@ -261,12 +265,19 @@ def compare_uv065():
     plt.clf() #clear the figure
     xx=0.65;
     i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
-    plt.plot(uv_2d[i1,:],y_2d[i1,:]-y_2d[i1,0],'b-', label= "Resolved")
-    plt.plot(uv_model_2d[i1,:],y_2d[i1,:]-y_2d[i1,0],'r-', label= "Modelled")
+    
+    counter_065 = 0
+    for i in range(nj):
+        counter_065 += 1
+        if visc_turb[i1,i]/viscos > 1.0:
+            break
+        
+    plt.plot(uv_2d[i1,:],y_2d[i1,:],'b-', label= "Resolved")
+    plt.plot(uv_model_2d[i1,:],y_2d[i1,:],'r-', label= "Modelled")
     plt.xlabel("$\overline{v'v'}$")
-    plt.ylabel("$y-y_{wall}$")
+    plt.ylabel("$y$")
     plt.title("$x=0.65$")
-    plt.axis([-0.02, 0.02,0,0.2])
+    plt.axis([-0.02, 0.02,np.min(y_2d[i1,0]), y_2d[i1,counter_065]])
     plt.legend()
     
 #*************************
@@ -276,16 +287,24 @@ def compare_uv100():
     plt.clf() #clear the figure
     xx=1.00;
     i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
-    plt.plot(uv_2d[i1,:],y_2d[i1,:]-y_2d[i1,0],'b-', label= "Resolved")
-    plt.plot(uv_model_2d[i1,:],y_2d[i1,:]-y_2d[i1,0],'r-', label = "Modelled")    
+    
+    counter_100 = 0
+    for i in range(nj):
+        counter_100 += 1
+        print(counter_100)
+        if visc_turb[i1,i]/viscos > 1.0:
+            break
+        
+    plt.plot(uv_2d[i1,:],y_2d[i1,:],'b-', label= "Resolved")
+    plt.plot(uv_model_2d[i1,:],y_2d[i1,:],'r-', label = "Modelled")    
     plt.xlabel("$\overline{v'v'}$")
-    plt.ylabel("$y-y_{wall}$")
+    plt.ylabel("$y$")
     plt.title("$x=1.00$")
-    plt.axis([-0.04, 0.02,0,0.2])
+    plt.axis([-0.04, 0.02,np.min(y_2d[i1,0]), y_2d[i1,counter_100]]) 
     plt.legend()
 
 # ---- Extras Plots
-################################ contoue plot
+################################ contour plot
 def contour():
     plt.figure("Figure 4")
     plt.clf() #clear the figure
@@ -350,11 +369,14 @@ button_uv065.grid(row=9, column=1, sticky='nesw')
 button_uv130 = tk.Button(root, text= 'uv130', command = uv130)
 button_uv130.grid(row=10, column=1, sticky='nesw')
 
-button_compare_uv065 = tk.Button(root, text= 'Comparison uv065', command = compare_uv065)
-button_compare_uv065.grid(row=11, column=1, sticky='nesw')
+label_overview = tk.Label(text="V.2", background="grey")
+label_overview.grid(row=0, column=2, sticky='nesw')
 
-button_uv100 = tk.Button(root, text= 'Comparison uv100', command = compare_uv100)
-button_uv100.grid(row=12, column=1, sticky='nesw')
+button_compare_uv065 = tk.Button(root, text= 'Comparison uv065', command = compare_uv065)
+button_compare_uv065.grid(row=1, column=2, sticky='nesw')
+
+button_compare_uv100 = tk.Button(root, text= 'Comparison uv100', command = compare_uv100)
+button_compare_uv100.grid(row=2, column=2, sticky='nesw')
 
 # Extra Plots
 button_contour = tk.Button(root, text= 'Contour Plot', command = contour)

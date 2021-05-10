@@ -63,13 +63,150 @@ uvw = sio.loadmat('eps2_IDD_PANS.mat')
 tt=uvw['eps2_IDD_PANS']
 eps3d2= np.reshape(tt,(nk,nj,ni))
 
+#----  read v_3 & transform v_3 to a 3D array (file 3)
+uvw = sio.loadmat('u3_IDD_PANS.mat')
+ttu=uvw['u3_IDD_PANS']
+u3d3= np.reshape(ttu,(nk,nj,ni))
+# N.B.- We don't have to swich axex since python and fortran stores an array in the same way
+
+uvw = sio.loadmat('v3_IDD_PANS.mat')
+tt=uvw['v3_IDD_PANS']
+v3d3= np.reshape(tt,(nk,nj,ni))
+
+uvw = sio.loadmat('w3_IDD_PANS.mat')
+tt=uvw['w3_IDD_PANS']
+w3d3= np.reshape(tt,(nk,nj,ni))
+
+uvw = sio.loadmat('te3_IDD_PANS.mat')
+tt=uvw['te3_IDD_PANS']
+te3d3= np.reshape(tt,(nk,nj,ni))
+
+uvw = sio.loadmat('eps3_IDD_PANS.mat')
+tt=uvw['eps3_IDD_PANS']
+eps3d3= np.reshape(tt,(nk,nj,ni))
+
+
+#----  read v_4 & transform v_4 to a 3D array (file 4)
+uvw = sio.loadmat('u4_IDD_PANS.mat')
+ttu=uvw['u4_IDD_PANS']
+u3d4= np.reshape(ttu,(nk,nj,ni))
+# N.B.- We don't have to swich axex since python and fortran stores an array in the same way
+
+uvw = sio.loadmat('v4_IDD_PANS.mat')
+tt=uvw['v4_IDD_PANS']
+v3d4= np.reshape(tt,(nk,nj,ni))
+
+uvw = sio.loadmat('w4_IDD_PANS.mat')
+tt=uvw['w4_IDD_PANS']
+w3d4= np.reshape(tt,(nk,nj,ni))
+
+uvw = sio.loadmat('te4_IDD_PANS.mat')
+tt=uvw['te4_IDD_PANS']
+te3d4= np.reshape(tt,(nk,nj,ni))
+
+uvw = sio.loadmat('eps4_IDD_PANS.mat')
+tt=uvw['eps4_IDD_PANS']
+eps3d4= np.reshape(tt,(nk,nj,ni))
+
+
+#----  read v_5 & transform v_5 to a 3D array (file 5)
+uvw = sio.loadmat('u5_IDD_PANS.mat')
+ttu=uvw['u5_IDD_PANS']
+u3d5= np.reshape(ttu,(nk,nj,ni))
+# N.B.- We don't have to swich axex since python and fortran stores an array in the same way
+
+uvw = sio.loadmat('v5_IDD_PANS.mat')
+tt=uvw['v5_IDD_PANS']
+v3d5= np.reshape(tt,(nk,nj,ni))
+
+uvw = sio.loadmat('w5_IDD_PANS.mat')
+tt=uvw['w5_IDD_PANS']
+w3d5= np.reshape(tt,(nk,nj,ni))
+
+uvw = sio.loadmat('te5_IDD_PANS.mat')
+tt=uvw['te5_IDD_PANS']
+te3d5= np.reshape(tt,(nk,nj,ni))
+
+uvw = sio.loadmat('eps5_IDD_PANS.mat')
+tt=uvw['eps5_IDD_PANS']
+eps3d5= np.reshape(tt,(nk,nj,ni))
+
+
+#----  read v_6 & transform v_6 to a 3D array (file 6)
+uvw = sio.loadmat('u6_IDD_PANS.mat')
+ttu=uvw['u6_IDD_PANS']
+u3d6= np.reshape(ttu,(nk,nj,ni))
+# N.B.- We don't have to swich axex since python and fortran stores an array in the same way
+
+uvw = sio.loadmat('v6_IDD_PANS.mat')
+tt=uvw['v6_IDD_PANS']
+v3d6= np.reshape(tt,(nk,nj,ni))
+
+uvw = sio.loadmat('w6_IDD_PANS.mat')
+tt=uvw['w6_IDD_PANS']
+w3d6= np.reshape(tt,(nk,nj,ni))
+
+uvw = sio.loadmat('te6_IDD_PANS.mat')
+tt=uvw['te6_IDD_PANS']
+te3d6= np.reshape(tt,(nk,nj,ni))
+
+uvw = sio.loadmat('eps6_IDD_PANS.mat')
+tt=uvw['eps6_IDD_PANS']
+eps3d6= np.reshape(tt,(nk,nj,ni))
+
+
+#----  read v_7 & transform v_7 to a 3D array (file 7)
+uvw = sio.loadmat('u7_IDD_PANS.mat')
+ttu=uvw['u7_IDD_PANS']
+u3d7= np.reshape(ttu,(nk,nj,ni))
+# N.B.- We don't have to swich axex since python and fortran stores an array in the same way
+
+uvw = sio.loadmat('v7_IDD_PANS.mat')
+tt=uvw['v7_IDD_PANS']
+v3d7= np.reshape(tt,(nk,nj,ni))
+
+uvw = sio.loadmat('w7_IDD_PANS.mat')
+tt=uvw['w7_IDD_PANS']
+w3d7= np.reshape(tt,(nk,nj,ni))
+
+uvw = sio.loadmat('te7_IDD_PANS.mat')
+tt=uvw['te7_IDD_PANS']
+te3d7= np.reshape(tt,(nk,nj,ni))
+
+uvw = sio.loadmat('eps7_IDD_PANS.mat')
+tt=uvw['eps7_IDD_PANS']
+eps3d7= np.reshape(tt,(nk,nj,ni))
+
+
+#----  read v_8 & transform v_8 to a 3D array (file 8)
+uvw = sio.loadmat('u8_IDD_PANS.mat')
+ttu=uvw['u8_IDD_PANS']
+u3d8= np.reshape(ttu,(nk,nj,ni))
+# N.B.- We don't have to swich axex since python and fortran stores an array in the same way
+
+uvw = sio.loadmat('v8_IDD_PANS.mat')
+tt=uvw['v8_IDD_PANS']
+v3d8= np.reshape(tt,(nk,nj,ni))
+
+uvw = sio.loadmat('w8_IDD_PANS.mat')
+tt=uvw['w8_IDD_PANS']
+w3d8= np.reshape(tt,(nk,nj,ni))
+
+uvw = sio.loadmat('te8_IDD_PANS.mat')
+tt=uvw['te8_IDD_PANS']
+te3d8= np.reshape(tt,(nk,nj,ni))
+
+uvw = sio.loadmat('eps8_IDD_PANS.mat')
+tt=uvw['eps8_IDD_PANS']
+eps3d8= np.reshape(tt,(nk,nj,ni))
+
 
 # merge 2 files. This means that new ni = 2*ni
-u3d=np.concatenate((u3d1, u3d2), axis=0)
-v3d=np.concatenate((v3d1, v3d2), axis=0)
-w3d=np.concatenate((w3d1, w3d2), axis=0)
-te3d=np.concatenate((te3d1, te3d2), axis=0)
-eps3d=np.concatenate((eps3d1, eps3d2), axis=0)
+u3d=np.concatenate((u3d1, u3d2, u3d3, u3d4, u3d5, u3d6, u3d7, u3d8), axis=0)
+v3d=np.concatenate((v3d1, v3d2, v3d3, v3d4, v3d5, v3d6, v3d7, v3d8), axis=0)
+w3d=np.concatenate((w3d1, w3d2, w3d3, w3d4, w3d5, w3d6, w3d7, w3d8), axis=0)
+te3d=np.concatenate((te3d1, te3d2, te3d3, te3d4, te3d5, te3d6, te3d7, te3d8), axis=0)
+eps3d=np.concatenate((eps3d1, eps3d2, eps3d3, eps3d4, eps3d5, eps3d6, eps3d7, eps3d8), axis=0)
 
 
 # x coordinate direction = index 0, first index
@@ -154,7 +291,7 @@ def uv_stress_resolved():
     plt.figure("uv_Stress_resolved")
     plt.plot(yplus, uvmean1)
     plt.title('Resolved uv Stress')
-    plt.ylabel("$U^+$")
+    plt.ylabel("$u^\prime v^\prime$")
     plt.xlabel("$y^+$")
 
 # ---- U4
@@ -162,11 +299,20 @@ def te_plot():
     plt.figure("Turbulent Kinetic Energy")
     plt.plot(yplus, temean, label='$k_{modelled}$')
     plt.plot(yplus, te_resolved, label='$k_{resolved}$')
-    plt.plot(yplus, te_resolved + temean, label='$k_{sum}$')
+    plt.plot(yplus, te_resolved + temean, label='$k_{tot}$')
     plt.title('Turbulent Kinetic Energy')
-    plt.ylabel("$U^+$")
+    plt.ylabel("$k$")
     plt.xlabel("$y^+$")
     plt.legend()
+
+line08 = np.ones(np.size(yplus))
+def te_plot_ratio():
+    plt.figure("Turbulent Kinetic Energy ratio")
+    plt.plot(yplus, te_resolved/(te_resolved + temean))
+    plt.plot(yplus, 0.8*line08)
+    plt.title('k ratio')
+    plt.ylabel("$Ratio$")
+    plt.xlabel("$y^+$")
     
 # ---- U5
 Cmu = 0.09
@@ -190,8 +336,17 @@ def turbulent_shear():
     plt.figure("Turbulent Shear")
     plt.plot(yplus, tau12, label='$\\tau_{12}$')
     plt.plot(yplus, uvmean1, label='$\\tau_{resolved}$')
-    plt.title('Turbulent Kinetic Energy')
-    plt.ylabel("Shear")
+    plt.title('Turbulent Shear Ratio')
+    plt.ylabel("$\\tau$")
+    plt.xlabel("$y^+$")
+    plt.legend()
+
+def turbulent_shear_ratio():
+    plt.figure("Turbulent Shear Ratio")
+    plt.plot(yplus, uvmean1/(tau12 + uvmean1), label='$\\tau_{ratio}$')
+    plt.plot(yplus, 0.8*line08)
+    plt.title('Turbulent Shear Ratio')
+    plt.ylabel("$\\tau$ Ratio")
     plt.xlabel("$y^+$")
     plt.legend()
     
@@ -211,10 +366,10 @@ def boundary_interface_DES():
     plt.figure("DES")
     plt.plot(yplus, F_DES)
     plt.plot(yplus, np.ones(np.size(yplus)), 'k-')
-    plt.title('DDES $F_{DDES}$')
+    plt.title('DES $F_{DES}$')
     plt.ylabel("f")
     plt.xlabel("$y^+$")
-    plt.legend()
+
 
 def boundary_interface_DDES():
     plt.figure("DDES")
@@ -223,7 +378,7 @@ def boundary_interface_DDES():
     plt.title('DDES $F_{DDES}$')
     plt.ylabel("f")
     plt.xlabel("$y^+$")
-    plt.legend()
+
 # ---- U7
 
 kappa = 0.41
@@ -335,11 +490,12 @@ L_v_K_3D_mean = np.mean(L_v_K_3D , axis=(0,2))
 L_v_K_3D_mean_alt = np.mean(L_v_K_3D_alt , axis=(0,2))
 
 def length_scale_compare():
-    plt.figure("Length_scale_compare")
+    plt.figure("Length_scale_comparison")
     plt.plot(yplus, L_v_K_1D , label='1D')
     plt.plot(yplus, L_v_K_3D_mean , label='3D')
     plt.plot(yplus, L_v_K_3D_mean_alt , label='3D Alternative')
     plt.title('Length_scale_compare')
+    plt.axis([0, 5200, 0, 0.5])
     plt.ylabel("Length Scale")
     plt.xlabel("$y^+$")
     plt.legend()
@@ -376,12 +532,18 @@ label_overview.grid(row=0, column=3, sticky='nesw')
 button_te = tk.Button(root, text= 'Resolved tubulent Kinetic Energy', command = te_plot)
 button_te.grid(row=1, column=3, sticky='nesw')
 
+button_te_ratio = tk.Button(root, text= 'Tubulent Kinetic Energy resolved ratio', command = te_plot_ratio)
+button_te_ratio.grid(row=2, column=3, sticky='nesw')
+
 # U5
 label_overview = tk.Label(text="U5", background="grey")
 label_overview.grid(row=0, column=4, sticky='nesw')
 
 button_turbulent_shear = tk.Button(root, text= 'Turbulent Shear', command = turbulent_shear)
 button_turbulent_shear.grid(row=1, column=4, sticky='nesw')
+
+button_turbulent_shear_ratio = tk.Button(root, text= 'Turbulent Shear Ratio', command = turbulent_shear_ratio)
+button_turbulent_shear_ratio.grid(row=2, column=4, sticky='nesw')
 
 # U6
 label_overview = tk.Label(text="U6", background="grey")
