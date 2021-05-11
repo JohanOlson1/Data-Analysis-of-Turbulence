@@ -21,7 +21,7 @@ nim1=ni-1
 njm1=nj-1
 
 # read data file
-vectz=np.genfromtxt("vectz_aiaa_journal.dat",comments="%")
+vectz=np.genfromtxt("vectz_aiaa_paper.dat",comments="%")
 ntstep=vectz[0]
 n=len(vectz)
 
@@ -89,7 +89,6 @@ x_2d=np.transpose(np.reshape(x,(nj,ni)))
 y_2d=np.transpose(np.reshape(y,(nj,ni)))
 
 # ---- Test
-# BIG QUESTION
 #uv_model = 2*u*v - u*v_inst -u_inst*v 
 uv_model_2d=np.transpose(np.reshape(uv_model,(nj,ni)))
 
@@ -112,6 +111,7 @@ y_2d_new=np.delete(y_2d,-1,0)
 y_2d_new=np.delete(y_2d_new,-1,1)
 # compute the gradient
 dudx,dudy=dphidx_dy(x_2d_new,y_2d_new,u_2d)
+dvdx,dvdy=dphidx_dy(x_2d_new,y_2d_new,v_2d)
 
 # ---- Plot 
 # ---- V.1
@@ -269,7 +269,7 @@ def compare_uv065():
     counter_065 = 0
     for i in range(nj):
         counter_065 += 1
-        if visc_turb[i1,i]/viscos > 1.0:
+        if visc_turb[i1,i]/viscos < 1.0 and i > 12:
             break
         
     plt.plot(uv_2d[i1,:],y_2d[i1,:],'b-', label= "Resolved")
@@ -292,7 +292,7 @@ def compare_uv100():
     for i in range(nj):
         counter_100 += 1
         print(counter_100)
-        if visc_turb[i1,i]/viscos > 1.0:
+        if visc_turb[i1,i]/viscos < 1.0 and i > 12:
             break
         
     plt.plot(uv_2d[i1,:],y_2d[i1,:],'b-', label= "Resolved")
@@ -302,6 +302,59 @@ def compare_uv100():
     plt.title("$x=1.00$")
     plt.axis([-0.04, 0.02,np.min(y_2d[i1,0]), y_2d[i1,counter_100]]) 
     plt.legend()
+    
+# ---- V.3
+
+def nu_t_ratio_contour():
+    plt.figure("Figure shear ratio")
+    plt.clf() #clear the figure
+    plt.contourf(x_2d,y_2d, visc_turb/viscos, 50)
+    plt.xlabel("$x$")
+    plt.ylabel("$y$")
+    plt.axis([0.6,1.5,0,1])
+    plt.title("contour $\\frac{\\nu_t}{\\nu}$")
+    plt.colorbar()
+    
+nu_t_mod_xx, empty=dphidx_dy(x_2d_new,y_2d_new, visc_turb*dudx)
+empty, nu_t_mod_xy =dphidx_dy(x_2d_new,y_2d_new, visc_turb*dudy)
+
+nu_t_mod_yx, empty=dphidx_dy(x_2d_new,y_2d_new, visc_turb*dvdx)
+empty, nu_t_mod_yy =dphidx_dy(x_2d_new,y_2d_new, visc_turb*dvdy)
+
+shear_stress_model_x = np.abs(nu_t_mod_xx) + np.abs(nu_t_mod_xy)
+shear_stress_model_y = np.abs(nu_t_mod_yx) + np.abs(nu_t_mod_yy)
+
+duudx, empty  =dphidx_dy(x_2d_new,y_2d_new, uu_2d)
+duvdx, duvdy  =dphidx_dy(x_2d_new,y_2d_new, uv_2d)
+empty, dvvdy  =dphidx_dy(x_2d_new,y_2d_new, vv_2d)
+
+shear_stress_resolved_x = np.abs(- duudx - duvdy)
+shear_stress_resolved_y = np.abs(- duvdx - dvvdy)
+    
+shear_stress_x_tot = shear_stress_model_x + shear_stress_resolved_x
+shear_stress_y_tot = shear_stress_model_y + shear_stress_resolved_y
+
+def shear_stress_ratio_x_contour_plot():
+    plt.figure("Figure nu_t ratio")
+    plt.clf() #clear the figure
+    plt.contourf(x_2d,y_2d, shear_stress_resolved_x/shear_stress_x_tot, 
+                 levels = np.linspace(0,1,30))
+    plt.xlabel("$x$")
+    plt.ylabel("$y$")
+    plt.axis([0.6,1.5,0,1])
+    plt.title("contour $shear ratio$")
+    plt.colorbar()
+
+def shear_stress_ratio_y_contour_plot():
+    plt.figure("Figure nu_t ratio")
+    plt.clf() #clear the figure
+    plt.contourf(x_2d,y_2d, shear_stress_resolved_y/shear_stress_y_tot, 
+                 levels = np.linspace(0,1,30))
+    plt.xlabel("$x$")
+    plt.ylabel("$y$")
+    plt.axis([0.6,1.5,0,1])
+    plt.title("contour $shear ratio$")
+    plt.colorbar()
 
 # ---- Extras Plots
 ################################ contour plot
@@ -321,12 +374,13 @@ def velocity_vector():
     plt.clf() #clear the figure
     k=6# plot every forth vector
     ss=3.2 #vector length
-    plt.quiver(x_2d[::k,::k],y_2d[::k,::k],u_2d[::k,::k],v_2d[::k,::k],width=0.01)
+    plt.quiver(x_2d[::k,::k],y_2d[::k,::k],u_2d[::k,::k],v_2d[::k,::k], width=0.01)
     plt.xlabel("$x$")
     plt.ylabel("$y$")
     plt.axis([0.6,1.5,0,1])
     plt.title("vector plot")
-    plt.savefig('vect_python.eps')
+
+
 
 def close_fig():
     plt.close()
@@ -335,7 +389,8 @@ root = tk.Tk()
 close_button = tk.Button(root, text='Close plot', command = close_fig)
 close_button.grid(row=0, column=0)
 
-# Overview Plots
+# V.1
+
 label_overview = tk.Label(text="V.1", background="grey")
 label_overview.grid(row=0, column=1, sticky='nesw')
 
@@ -369,6 +424,8 @@ button_uv065.grid(row=9, column=1, sticky='nesw')
 button_uv130 = tk.Button(root, text= 'uv130', command = uv130)
 button_uv130.grid(row=10, column=1, sticky='nesw')
 
+# V.2
+
 label_overview = tk.Label(text="V.2", background="grey")
 label_overview.grid(row=0, column=2, sticky='nesw')
 
@@ -377,6 +434,20 @@ button_compare_uv065.grid(row=1, column=2, sticky='nesw')
 
 button_compare_uv100 = tk.Button(root, text= 'Comparison uv100', command = compare_uv100)
 button_compare_uv100.grid(row=2, column=2, sticky='nesw')
+
+# V.3
+
+label_overview = tk.Label(text="V.3", background="grey")
+label_overview.grid(row=0, column=3, sticky='nesw')
+
+button_nu_t_ratio = tk.Button(root, text= 'Nu_t ratio Contour Plot', command = nu_t_ratio_contour)
+button_nu_t_ratio.grid(row=1, column=3, sticky='nesw')
+
+button_shear_stress_ratio_x_contour_plot = tk.Button(root, text= 'Shear Stress Ratio x Contour', command = shear_stress_ratio_x_contour_plot)
+button_shear_stress_ratio_x_contour_plot.grid(row=2, column=3, sticky='nesw')
+
+button_shear_stress_ratio_y_contour_plot = tk.Button(root, text= 'Shear Stress Ratio y Contour', command = shear_stress_ratio_y_contour_plot)
+button_shear_stress_ratio_y_contour_plot.grid(row=3, column=3, sticky='nesw')
 
 # Extra Plots
 button_contour = tk.Button(root, text= 'Contour Plot', command = contour)
