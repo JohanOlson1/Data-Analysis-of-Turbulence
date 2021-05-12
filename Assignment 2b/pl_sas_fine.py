@@ -1,5 +1,6 @@
 import scipy.io as sio
 import numpy as np
+import tkinter as tk
 import matplotlib.pyplot as plt
 from dphidx_dy import dphidx_dy
 plt.rcParams.update({'font.size': 22})
@@ -52,7 +53,7 @@ for jj in range (0,nj):
       yp2d[ii,jj]=0.25*(y_2d[i,j]+y_2d[im1,j]+y_2d[i,jm1]+y_2d[im1,jm1])
 
 
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  read v_1 & transform v_1 to a 3D array (file 1)
+#  read v_1 & transform v_1 to a 3D array (file 1)
 uvw = sio.loadmat('u1_pans_iddes.mat')
 tt=uvw['u1_pans_iddes']
 u3d1= np.reshape(tt,(ni,nj,nk))  #v_1 velocity
@@ -65,7 +66,7 @@ uvw = sio.loadmat('w1_pans_iddes.mat')
 tt=uvw['w1_pans_iddes']
 w3d1= np.reshape(tt,(ni,nj,nk))  #v_3 velocity
 
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  read v_1 & transform v_1 to a 3D array (file 2)
+#  read v_2 & transform v_2 to a 3D array (file 2)
 uvw = sio.loadmat('u2_pans_iddes.mat')
 tt=uvw['u2_pans_iddes']
 u3d2= np.reshape(tt,(ni,nj,nk))
@@ -77,7 +78,87 @@ v3d2= np.reshape(tt,(ni,nj,nk))
 uvw = sio.loadmat('w2_pans_iddes.mat')
 tt=uvw['w2_pans_iddes']
 w3d2= np.reshape(tt,(ni,nj,nk))
-
+# =============================================================================
+# 
+# #  read v_3 & transform v_3 to a 3D array (file 3)
+# uvw = sio.loadmat('u3_pans_iddes.mat')
+# tt=uvw['u3_pans_iddes']
+# u3d3= np.reshape(tt,(ni,nj,nk))
+# 
+# uvw = sio.loadmat('v3_pans_iddes.mat')
+# tt=uvw['v3_pans_iddes']
+# v3d3= np.reshape(tt,(ni,nj,nk))
+# 
+# uvw = sio.loadmat('w3_pans_iddes.mat')
+# tt=uvw['w3_pans_iddes']
+# w3d3= np.reshape(tt,(ni,nj,nk))
+# 
+# #  read v_4 & transform v_4 to a 3D array (file 4)
+# uvw = sio.loadmat('u4_pans_iddes.mat')
+# tt=uvw['u4_pans_iddes']
+# u3d4= np.reshape(tt,(ni,nj,nk))
+# 
+# uvw = sio.loadmat('v4_pans_iddes.mat')
+# tt=uvw['v4_pans_iddes']
+# v3d4= np.reshape(tt,(ni,nj,nk))
+# 
+# uvw = sio.loadmat('w4_pans_iddes.mat')
+# tt=uvw['w4_pans_iddes']
+# w3d4= np.reshape(tt,(ni,nj,nk))
+# 
+# #  read v_5 & transform v_5 to a 3D array (file 5)
+# uvw = sio.loadmat('u5_pans_iddes.mat')
+# tt=uvw['u5_pans_iddes']
+# u3d5= np.reshape(tt,(ni,nj,nk))
+# 
+# uvw = sio.loadmat('v5_pans_iddes.mat')
+# tt=uvw['v5_pans_iddes']
+# v3d5= np.reshape(tt,(ni,nj,nk))
+# 
+# uvw = sio.loadmat('w5_pans_iddes.mat')
+# tt=uvw['w5_pans_iddes']
+# w3d5= np.reshape(tt,(ni,nj,nk))
+# 
+# #  read v_6 & transform v_6 to a 3D array (file 6)
+# uvw = sio.loadmat('u6_pans_iddes.mat')
+# tt=uvw['u6_pans_iddes']
+# u3d6= np.reshape(tt,(ni,nj,nk))
+# 
+# uvw = sio.loadmat('v6_pans_iddes.mat')
+# tt=uvw['v6_pans_iddes']
+# v3d6= np.reshape(tt,(ni,nj,nk))
+# 
+# uvw = sio.loadmat('w6_pans_iddes.mat')
+# tt=uvw['w6_pans_iddes']
+# w3d6= np.reshape(tt,(ni,nj,nk))
+# 
+# #  read v_7 & transform v_7 to a 3D array (file 7)
+# uvw = sio.loadmat('u7_pans_iddes.mat')
+# tt=uvw['u7_pans_iddes']
+# u3d7= np.reshape(tt,(ni,nj,nk))
+# 
+# uvw = sio.loadmat('v7_pans_iddes.mat')
+# tt=uvw['v7_pans_iddes']
+# v3d7= np.reshape(tt,(ni,nj,nk))
+# 
+# uvw = sio.loadmat('w7_pans_iddes.mat')
+# tt=uvw['w7_pans_iddes']
+# w3d7= np.reshape(tt,(ni,nj,nk))
+# 
+# #  read v_8 & transform v_8 to a 3D array (file 8)
+# uvw = sio.loadmat('u8_pans_iddes.mat')
+# tt=uvw['u8_pans_iddes']
+# u3d8= np.reshape(tt,(ni,nj,nk))
+# 
+# uvw = sio.loadmat('v8_pans_iddes.mat')
+# tt=uvw['v8_pans_iddes']
+# v3d8= np.reshape(tt,(ni,nj,nk))
+# 
+# uvw = sio.loadmat('w8_pans_iddes.mat')
+# tt=uvw['w8_pans_iddes']
+# w3d8= np.reshape(tt,(ni,nj,nk))
+# 
+# =============================================================================
 # merge 2 files. This means than new nk = 2*nk
 u3d=np.concatenate((u3d1, u3d2), axis=2)
 v3d=np.concatenate((v3d1, v3d2), axis=2)
@@ -167,7 +248,7 @@ for k in range (1,nk-1):
    dummyx,dummyy=dphidx_dy(x_2d,y_2d,dphidy)
    d2wdy2[:,:,k]=dummyy
 
-   print('derivarives computed for plane k',k,'out of',nk-2,'planes')
+   print('derivatives computed for plane k',k,'out of',nk-2,'planes')
  
 
 # compute z gradient (note the the command gradient cannot be used
@@ -248,4 +329,24 @@ dvdx_mean,dvdy_mean=dphidx_dy(x_2d,y_2d,vmean_2d)
 d2vdx2_mean,dummy=dphidx_dy(x_2d,y_2d,dvdx_mean)
 
 dummy,d2vdy2_mean=dphidx_dy(x_2d,y_2d,dvdy_mean)
+
+
+def close_fig():
+    plt.close()
+
+root = tk.Tk()
+close_button = tk.Button(root, text='Close plot', command = close_fig)
+close_button.grid(row=0, column=0)
+
+# V.6
+
+label_overview = tk.Label(text="V.6", background="grey")
+label_overview.grid(row=0, column=1, sticky='nesw')
+
+# =============================================================================
+# button_u_plot = tk.Button(root, text= 'u plot', command = u_plot)
+# button_u_plot.grid(row=1, column=1, sticky='nesw')
+# =============================================================================
+
+root.mainloop()
 

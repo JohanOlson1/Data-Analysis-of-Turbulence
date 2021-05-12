@@ -102,6 +102,7 @@ diss=vectz[idiss]/ntstep
 # uu is total inst. velocity squared. Hence the resolved turbulent resolved stresses are obtained as
 uu=uu-u**2
 vv=vv-v**2
+#ww=ww-w**2 no w exists...
 uv=uv-u*v
 
 p_2d=np.reshape(p,(ni,nj))
@@ -173,9 +174,9 @@ for i in range(ni-1):
             switch[i] = y_2d[i,j] - y_2d[i,0]    
             break
 
-k_res = 0.5*(uu_2d + vv_2d)
+k_res = 0.5*(uu_2d + vv_2d + ww_2d) # ww_2d aswell? not defined the same
 
-fk_def = k_res/(k_model_2d + k_res)
+fk_def = k_model_2d/(k_model_2d + k_res)
 
 def fk_boundary():
     plt.figure("Figure fk contour boundary")
@@ -255,7 +256,7 @@ def d_boundary_plot():
     
     
 l_PANS = np.power(k_model_2d, 3/2)/diss_2d
-l_RANS = np.power(k_model_2d + k_res, 3/2)/diss_2d
+l_RANS = np.power(k_res, 3/2)/diss_2d
 
 def length_scale_lines():
     plt.figure("Figure fk lines")
@@ -283,8 +284,8 @@ def length_scale_lines():
       
     xx = 2.00
     i1 = (np.abs(xx-x_2d[:,1])).argmin()
-    plt.plot(y_2d[i1,:]-y_2d[i1,0], l_PANS[i1,1:],'y-', label = 'x = 2.00 PANS')
-    plt.plot(y_2d[i1,:]-y_2d[i1,0], l_RANS[i1,1:],'y--', label = 'x = 2.00 RANS')
+    plt.plot(y_2d[i1,:]-y_2d[i1,0], l_PANS[i1,1:],'k-', label = 'x = 2.00 PANS')
+    plt.plot(y_2d[i1,:]-y_2d[i1,0], l_RANS[i1,1:],'k--', label = 'x = 2.00 RANS')
         
     plt.xlabel("$y-y_{wall}$")
     plt.ylabel("$Length Scale$")
@@ -314,17 +315,26 @@ def d_boundary_alt_plot():
     plt.axis([0.6,1.5,0, 0.3])
     plt.title("Wall distance")
 
-Limit = 500*vis_2d[1:,1:]*Cmu/(np.sqrt(k_model_2d[1:,1:]))
+arg1 = 2*L_t/y_2d
+arg2 = 500*viscos/(np.power(y_2d, 2)*omega[1:,1:])
 
+eta = np.maximum(arg1, arg2)
+F_S = np.tanh(np.power(eta, 2))
+#Limit = 500*vis_2d[1:,1:]*Cmu/(np.sqrt(k_model_2d[1:,1:]))
+
+limit = (1.0-F_S)*L_t/D
 y_boundary_alt_2 = np.zeros(ni-1)
 for i in range(ni-1):
     for j in range(nj-1):
-        if y_2d[i,j]-y_2d[i,0] > Limit[i,j]:
+        #if y_2d[i,j]-y_2d[i,0] > Limit[i,j]:
+        if 1.0 < limit[i,j]:
             y_boundary_alt_2[i] = y_2d[i,j]-y_2d[i,0]
             break
+        elif j == nj-2:
+            y_boundary_alt_2[i] = y_2d[i,j]-y_2d[i,0]
         
 def d_boundary_alt_2_plot():
-    plt.figure("Figure d boundary alt")
+    plt.figure("Figure d boundary alt 2")
     plt.clf() #clear the figure
     plt.plot(x_2d[:,0], y_boundary_alt_2, 'k-')
     plt.xlabel("$x$")

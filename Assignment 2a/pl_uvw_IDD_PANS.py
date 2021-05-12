@@ -247,6 +247,7 @@ DNS=np.genfromtxt("LM_Channel_5200_mean_prof.dat", dtype=None,comments="%")
 y_DNS=DNS[:,0]
 yplus_DNS=DNS[:,1]
 u_DNS=DNS[:,2]
+w_DNS=DNS[:,4]
 
 DNS=np.genfromtxt("LM_Channel_5200_vel_fluc_prof.dat", dtype=None,comments="%")
 
@@ -268,7 +269,7 @@ for i in range (0,40):
 # ---- Plot
 
 # ---- U2
-def plot_mean_velocity_profile():
+def plot_mean_velocity_profile_u():
     fig1,ax1 = plt.subplots()
     plt.subplots_adjust(left=0.20,bottom=0.20)
     
@@ -277,15 +278,25 @@ def plot_mean_velocity_profile():
     plt.axis([1, 8000, 0, 31])
     plt.ylabel("$U^+$")
     plt.xlabel("$y^+$")
+
+def plot_mean_velocity_profile_w():
+    fig2,ax2 = plt.subplots()
+    plt.subplots_adjust(left=0.20,bottom=0.20)
     
+    plt.semilogx(yplus,wmean/ustar,'b-')
+    plt.semilogx(yplus_DNS[jDNS],w_DNS[jDNS],'bo')
+    plt.axis([1, 8000, 0, 1])
+    plt.ylabel("$W^+$")
+    plt.xlabel("$y^+$")
+
+# ---- U3
+        
 uvmean1= np.mean((u3d-umean[None,:,None])*(v3d-vmean[None,:,None]), axis=(0,2))
 uumean = np.mean((u3d-umean[None,:,None])*(u3d-umean[None,:,None]), axis=(0,2))
 vvmean = np.mean((v3d-vmean[None,:,None])*(v3d-vmean[None,:,None]), axis=(0,2))
 wwmean = np.mean((w3d-wmean[None,:,None])*(w3d-wmean[None,:,None]), axis=(0,2))
 
 te_resolved = 0.5*(uumean + vvmean + wwmean)
-
-# ---- U3
 
 def uv_stress_resolved():
     plt.figure("uv_Stress_resolved")
@@ -306,13 +317,16 @@ def te_plot():
     plt.legend()
 
 line08 = np.ones(np.size(yplus))
+line_boundary = np.ones(np.size(yplus))
 def te_plot_ratio():
     plt.figure("Turbulent Kinetic Energy ratio")
-    plt.plot(yplus, te_resolved/(te_resolved + temean))
-    plt.plot(yplus, 0.8*line08)
-    plt.title('k ratio')
+    plt.plot(yplus, te_resolved/(te_resolved + temean), 'k-', label = '$\\frac{k_{res}}{k_{tot}}$')
+    plt.plot(270*line_boundary, np.linspace(0,1, np.size(temean)), 'r-', label = 'Boundary')
+    plt.plot(yplus, 0.8*line08, 'g-', label = '0.8 limit')
+    plt.title('Turbulent kinetic energy resolved ratio')
     plt.ylabel("$Ratio$")
     plt.xlabel("$y^+$")
+    plt.legend()
     
 # ---- U5
 Cmu = 0.09
@@ -343,8 +357,9 @@ def turbulent_shear():
 
 def turbulent_shear_ratio():
     plt.figure("Turbulent Shear Ratio")
-    plt.plot(yplus, uvmean1/(tau12 + uvmean1), label='$\\tau_{ratio}$')
+    plt.plot(yplus, uvmean1/(tau12 + uvmean1), label='$\\frac{\\tau_{res}}{\\tau_{tot}}$')
     plt.plot(yplus, 0.8*line08)
+    plt.plot(270*line_boundary, np.linspace(0,1, np.size(temean)), 'r-', label = 'Boundary')
     plt.title('Turbulent Shear Ratio')
     plt.ylabel("$\\tau$ Ratio")
     plt.xlabel("$y^+$")
@@ -352,12 +367,12 @@ def turbulent_shear_ratio():
     
 # ---- U6
 
-L_t = np.divide(np.power(temean, 3/2), epsmean)
+L_t = np.power(temean, 1.5)/epsmean
 
-F_DES = (1/(0.61*dx))*L_t
+F_DES = (L_t/(0.61*dx))
 
 arg1 = 2*np.divide(L_t, y)
-arg2 = 500*viscos*Cmu*np.divide(temean, np.multiply(epsmean,np.power(y, 2)))
+arg2 = 500*viscos*Cmu*temean/(epsmean*np.power(y, 2))
 eta = np.maximum(arg1, arg2)
 F_S = np.tanh(np.power(eta,2))
 F_DDES = (1/(0.61*dx))*np.multiply(L_t, 1 - F_S)
@@ -366,7 +381,7 @@ def boundary_interface_DES():
     plt.figure("DES")
     plt.plot(yplus, F_DES)
     plt.plot(yplus, np.ones(np.size(yplus)), 'k-')
-    plt.title('DES $F_{DES}$')
+    plt.title('$F_{DES}$')
     plt.ylabel("f")
     plt.xlabel("$y^+$")
 
@@ -375,7 +390,7 @@ def boundary_interface_DDES():
     plt.figure("DDES")
     plt.plot(yplus, F_DDES)
     plt.plot(yplus, np.ones(np.size(yplus)), 'k-')
-    plt.title('DDES $F_{DDES}$')
+    plt.title('$F_{DDES}$')
     plt.ylabel("f")
     plt.xlabel("$y^+$")
 
@@ -390,13 +405,13 @@ zeta = 1
 dumeandy = np.gradient(umean, y)
 dumeandy2 = np.gradient(dumeandy, y)
 
-L_v_K_1D = kappa * np.abs(np.divide(dumeandy, dumeandy2))
+L_v_K_1D = kappa * dumeandy/dumeandy2
 
-S_1D = 2*np.multiply(dumeandy2, dumeandy2)
+S_1D = np.sqrt(2)*dumeandy
 
 L_1D = (Cmu**(3/4))*np.multiply(np.power(temean, 3/2), epsmean)
 
-T_1_1D = zeta*kappa*np.divide(np.multiply(np.multiply(S_1D,S_1D), L_1D), L_v_K_1D)
+T_1D = zeta*kappa*np.power(S_1D, 2)*L_1D/L_v_K_1D
 
 # 3D
 
@@ -515,8 +530,11 @@ close_button.grid(row=0, column=0)
 label_overview = tk.Label(text="U2", background="grey")
 label_overview.grid(row=0, column=1, sticky='nesw')
 
-button_mean_velocity_profile = tk.Button(root, text= 'Mean velocity Profile v_1', command = plot_mean_velocity_profile)
-button_mean_velocity_profile.grid(row=1, column=1, sticky='nesw')
+button_mean_velocity_profile_vx = tk.Button(root, text= 'Mean velocity Profile v_1', command = plot_mean_velocity_profile_u)
+button_mean_velocity_profile_vx.grid(row=1, column=1, sticky='nesw')
+
+button_mean_velocity_profile_vz = tk.Button(root, text= 'Mean velocity Profile v_3', command = plot_mean_velocity_profile_w)
+button_mean_velocity_profile_vz.grid(row=2, column=1, sticky='nesw')
 
 # U3
 label_overview = tk.Label(text="U3", background="grey")
