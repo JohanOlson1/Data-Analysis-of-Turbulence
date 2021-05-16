@@ -185,7 +185,7 @@ def fk_boundary():
     plt.xlabel("$x$")
     plt.ylabel("$y-y_{wall}$")
     plt.axis([0.6,1.5,0,0.2])
-    plt.title("Wall distance")
+    plt.title("Wall distance $f_k=0.4$")
 
 def fk_lines():
     plt.figure("Figure fk lines")
@@ -204,7 +204,7 @@ def fk_lines():
     xx = 1.00
     i1 = (np.abs(xx-x_2d[:,1])).argmin()
     plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_2d[i1,1:],'g-', label = 'x = 1.00')
-    plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_def[i1,1:],'g--', label = 'x = 0.1.00 by def')
+    plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_def[i1,1:],'g--', label = 'x = 1.00 by def')
     
     xx = 1.20
     i1 = (np.abs(xx-x_2d[:,1])).argmin()
@@ -252,7 +252,7 @@ def d_boundary_plot():
     plt.xlabel("$x$")
     plt.ylabel("$y-y_{wall}$")
     plt.axis([0.6,1.5,0, 0.3])
-    plt.title("Wall distance")
+    plt.title("Wall distance SA-DES")
     
     
 l_PANS = np.power(k_model_2d, 3/2)/diss_2d
@@ -313,7 +313,7 @@ def d_boundary_alt_plot():
     plt.xlabel("$x$")
     plt.ylabel("$y-y_{wall}$")
     plt.axis([0.6,1.5,0, 0.3])
-    plt.title("Wall distance")
+    plt.title("Wall distance SST-DES")
 
 arg1 = 2*L_t/y_2d
 arg2 = 500*viscos/(np.power(y_2d, 2)*omega[1:,1:])
@@ -340,7 +340,7 @@ def d_boundary_alt_2_plot():
     plt.xlabel("$x$")
     plt.ylabel("$y-y_{wall}$")
     plt.axis([0.6,1.5,0, 0.3])
-    plt.title("Wall distance")
+    plt.title("Wall distance SST-DDES")
 
 
 def close_fig():

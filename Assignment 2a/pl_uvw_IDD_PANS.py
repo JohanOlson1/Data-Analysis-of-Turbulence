@@ -302,7 +302,7 @@ def uv_stress_resolved():
     plt.figure("uv_Stress_resolved")
     plt.plot(yplus, uvmean1)
     plt.title('Resolved uv Stress')
-    plt.ylabel("$u^\prime v^\prime$")
+    plt.ylabel("$\\langle u^\prime v^\prime \\rangle$")
     plt.xlabel("$y^+$")
 
 # ---- U4
@@ -379,20 +379,22 @@ F_DDES = (1/(0.61*dx))*np.multiply(L_t, 1 - F_S)
 
 def boundary_interface_DES():
     plt.figure("DES")
-    plt.plot(yplus, F_DES)
-    plt.plot(yplus, np.ones(np.size(yplus)), 'k-')
+    plt.plot(yplus, F_DES, label = '$F_{DES}$')
+    plt.plot(yplus, np.ones(np.size(yplus)), 'k-', label = 'boundary limit')
     plt.title('$F_{DES}$')
     plt.ylabel("f")
     plt.xlabel("$y^+$")
+    plt.legend()
 
 
 def boundary_interface_DDES():
     plt.figure("DDES")
-    plt.plot(yplus, F_DDES)
-    plt.plot(yplus, np.ones(np.size(yplus)), 'k-')
+    plt.plot(yplus, F_DDES, label = '$F_{DDES}$')
+    plt.plot(yplus, np.ones(np.size(yplus)), 'k-', label = 'boundary limit')
     plt.title('$F_{DDES}$')
     plt.ylabel("f")
     plt.xlabel("$y^+$")
+    plt.legend()
 
 # ---- U7
 

@@ -139,7 +139,7 @@ def vv065():
     plt.xlabel("$\overline{v'v'}$")
     plt.ylabel("$y$")
     plt.title("$x=0.65$")
-    plt.axis([0, 0.01, np.min(y_2d[i1,0]), 0.4])
+    plt.axis([0, 0.01, np.min(y_2d[i1,0]), 0.3])
     
 #*************************
 # plot vv
@@ -274,7 +274,7 @@ def compare_uv065():
         
     plt.plot(uv_2d[i1,:],y_2d[i1,:],'b-', label= "Resolved")
     plt.plot(uv_model_2d[i1,:],y_2d[i1,:],'r-', label= "Modelled")
-    plt.xlabel("$\overline{v'v'}$")
+    plt.xlabel("$\overline{u'v'}$")
     plt.ylabel("$y$")
     plt.title("$x=0.65$")
     plt.axis([-0.02, 0.02,np.min(y_2d[i1,0]), y_2d[i1,counter_065]])
@@ -297,7 +297,7 @@ def compare_uv100():
         
     plt.plot(uv_2d[i1,:],y_2d[i1,:],'b-', label= "Resolved")
     plt.plot(uv_model_2d[i1,:],y_2d[i1,:],'r-', label = "Modelled")    
-    plt.xlabel("$\overline{v'v'}$")
+    plt.xlabel("$\overline{u'v'}$")
     plt.ylabel("$y$")
     plt.title("$x=1.00$")
     plt.axis([-0.04, 0.02,np.min(y_2d[i1,0]), y_2d[i1,counter_100]]) 
@@ -335,25 +335,25 @@ shear_stress_x_tot = shear_stress_model_x + shear_stress_resolved_x
 shear_stress_y_tot = shear_stress_model_y + shear_stress_resolved_y
 
 def shear_stress_ratio_x_contour_plot():
-    plt.figure("Figure nu_t ratio")
+    plt.figure("Figure test 1")
     plt.clf() #clear the figure
-    plt.contourf(x_2d,y_2d, shear_stress_resolved_x/shear_stress_x_tot, 
+    plt.contourf(x_2d,y_2d, shear_stress_model_x/shear_stress_x_tot, 
                  levels = np.linspace(0,1,30))
     plt.xlabel("$x$")
     plt.ylabel("$y$")
     plt.axis([0.6,1.5,0,1])
-    plt.title("contour $shear ratio$")
+    plt.title("contour term 1 ratio $\\frac{resolved}{total}$")
     plt.colorbar()
 
 def shear_stress_ratio_y_contour_plot():
-    plt.figure("Figure nu_t ratio")
+    plt.figure("Figure test 2")
     plt.clf() #clear the figure
-    plt.contourf(x_2d,y_2d, shear_stress_resolved_y/shear_stress_y_tot, 
+    plt.contourf(x_2d,y_2d, shear_stress_model_y/shear_stress_y_tot, 
                  levels = np.linspace(0,1,30))
     plt.xlabel("$x$")
     plt.ylabel("$y$")
     plt.axis([0.6,1.5,0,1])
-    plt.title("contour $shear ratio$")
+    plt.title("contour term 2 ratio $\\frac{resolved}{total}$")
     plt.colorbar()
 
 # ---- Extras Plots
