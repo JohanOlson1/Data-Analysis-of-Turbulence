@@ -115,7 +115,7 @@ vv_2d=np.reshape(vv,(ni,nj))
 ww_2d=np.reshape(ww,(ni,nj))
 k_model_2d=np.reshape(k_model,(ni,nj))
 vis_2d=np.reshape(vis,(ni,nj)) #this is to total viscosity, i.e. vis_tot=vis+vis_turb
-diss_2d=np.reshape(diss,(ni,nj)) #this is to total viscosity, i.e. vis_tot=vis+vis_turb
+diss_2d=np.reshape(diss,(ni,nj)) 
 
 # set fk_2d=1 at upper boundary
 fk_2d[:,nj-1]=fk_2d[:,nj-2]
@@ -171,13 +171,9 @@ switch = np.zeros(ni-1)
 for i in range(ni-1):
     for j in reversed(range(nj-1)):
         if fk_2d[i,j] < 0.4:
-            switch[i] = y_2d[i,j] - y_2d[i,0]    
+            switch[i] = y_2d[i,j] - y_2d[i,0]
             break
-
-k_res = 0.5*(uu_2d + vv_2d + ww_2d) # ww_2d aswell? not defined the same
-
-fk_def = k_model_2d/(k_model_2d + k_res)
-
+            
 def fk_boundary():
     plt.figure("Figure fk contour boundary")
     plt.clf() #clear the figure
@@ -186,44 +182,9 @@ def fk_boundary():
     plt.ylabel("$y-y_{wall}$")
     plt.axis([0.6,1.5,0,0.2])
     plt.title("Wall distance $f_k=0.4$")
-
-def fk_lines():
-    plt.figure("Figure fk lines")
-    plt.clf() #clear the figure
-    
-    xx = 0.65
-    i1 = (np.abs(xx-x_2d[:,1])).argmin()
-    plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_2d[i1,1:],'r-', label = 'x = 0.65')
-    plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_def[i1,1:],'r--', label = 'x = 0.65 by def')
-    
-    xx = 0.80
-    i1 = (np.abs(xx-x_2d[:,1])).argmin()
-    plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_2d[i1,1:],'b-', label = 'x = 0.80')
-    plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_def[i1,1:],'b--', label = 'x = 0.80 by def')
-    
-    xx = 1.00
-    i1 = (np.abs(xx-x_2d[:,1])).argmin()
-    plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_2d[i1,1:],'g-', label = 'x = 1.00')
-    plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_def[i1,1:],'g--', label = 'x = 1.00 by def')
-    
-    xx = 1.20
-    i1 = (np.abs(xx-x_2d[:,1])).argmin()
-    plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_2d[i1,1:],'y-', label = 'x = 1.20')
-    plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_def[i1,1:],'y--', label = 'x = 1.20 by def')
+                
+Cmu = 0.09            
         
-    plt.xlabel("$y-y_{wall}$")
-    plt.ylabel("$f_k$")
-    plt.axis([0, 0.3, 0, 1.1])
-    plt.title("Wall distance")
-    plt.legend()
-    
-# TODO:
-Cmu = 0.09
-fk_def2 = (dz)*1/np.sqrt(Cmu) * np.power(diss_2d, 2/3)/(k_model_2d + k_res)
-    
-    
-# V.5 
-
 dx = np.diff(x_2d, axis = 0)
 
 dx = np.insert(dx,0, dx[-1,:], axis=0)
@@ -235,6 +196,58 @@ dy = np.insert(dy,0, dy[:,-1], axis = 1)
 C_des = 0.65
 
 dZ = np.ones((ni-1,nj-1))
+
+# ---- Here
+k_res = 0.5*(uu_2d + vv_2d + ww_2d) # ww_2d aswell? not defined the same
+
+k_tot = k_model_2d + k_res
+
+fk_def = k_model_2d/k_tot
+
+L_t_alt = np.power(k_tot, 3/2)/diss_2d
+
+Delta = np.minimum(dx, dy, dz*dZ)
+
+Delta2 = np.power(Delta*dx*dy*dz, 1/3)
+
+fk_alt = np.power(Delta2/L_t_alt[1:,1:], 2/3)/(np.sqrt(Cmu))
+
+
+def fk_lines():
+    plt.figure("Figure fk lines")
+    plt.clf() #clear the figure
+    
+    xx = 0.65
+    i1 = (np.abs(xx-x_2d[:,1])).argmin()
+    plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_2d[i1,1:],'r-', label = 'x = 0.65')
+    plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_def[i1,1:],'r--', label = 'x = 0.65 by def')
+    plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_alt[i1,:],'r*', label = 'x = 0.65 by alt def')
+    
+    xx = 0.80
+    i1 = (np.abs(xx-x_2d[:,1])).argmin()
+    plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_2d[i1,1:],'b-', label = 'x = 0.80')
+    plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_def[i1,1:],'b--', label = 'x = 0.80 by def')
+    plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_alt[i1,:],'b*', label = 'x = 0.80 by alt def')
+    
+    xx = 0.90
+    i1 = (np.abs(xx-x_2d[:,1])).argmin()
+    plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_2d[i1,1:],'g-', label = 'x = 0.90')
+    plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_def[i1,1:],'g--', label = 'x = 0.90 by def')
+    plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_alt[i1,:],'g*', label = 'x = 0.90 by alt def')
+    
+    xx = 1.30
+    i1 = (np.abs(xx-x_2d[:,1])).argmin()
+    plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_2d[i1,1:],'y-', label = 'x = 1.30')
+    plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_def[i1,1:],'y--', label = 'x = 1.30 by def')
+    plt.plot(y_2d[i1,:]-y_2d[i1,0], fk_alt[i1,:],'y*', label = 'x = 1.30 by alt def')
+        
+    plt.xlabel("$y-y_{wall}$")
+    plt.ylabel("$f_k$")
+    plt.axis([0, 0.3, 0, 1.1])
+    plt.title("Wall distance")
+    plt.legend() 
+    
+# V.5 
 
 d_boundary = C_des * np.maximum(dx, dy, dz*dZ)
 
@@ -342,6 +355,15 @@ def d_boundary_alt_2_plot():
     plt.axis([0.6,1.5,0, 0.3])
     plt.title("Wall distance SST-DDES")
 
+def check_contour_plot():
+    plt.figure("Check")
+    plt.clf() #clear the figure
+    plt.contourf(x_2d,y_2d, limit, np.linspace(0,1,30))
+    plt.xlabel("$x$")
+    plt.ylabel("$y$")
+    plt.axis([0.6,1.5,0, 1])
+    plt.title("Check")
+    plt.colorbar()
 
 def close_fig():
     plt.close()
@@ -383,5 +405,8 @@ button_length_scale_line2.grid(row=3, column=2, sticky='nesw')
 
 button_length_scale_line3 = tk.Button(root, text= 'd boundary alt 2', command = d_boundary_alt_2_plot)
 button_length_scale_line3.grid(row=4, column=2, sticky='nesw')
+
+button_check_contour_plot = tk.Button(root, text= 'check contour plot', command = check_contour_plot)
+button_check_contour_plot.grid(row=5, column=2, sticky='nesw')
 
 root.mainloop()

@@ -1,10 +1,10 @@
 - [ ] V1
 
-  - Neccessary to plot all? Maybe 065, 080 and 110?
+  - Neccessary to plot all? Maybe only 065, 080, 090 and 130?
 
 - [ ] V2
 
-  - Resolved stress correct? A potential alternative in ebook
+  - Resolved stress correct? A potential alternative in ebook page ...
 
 - [ ] V3
 

@@ -366,8 +366,9 @@ def turbulent_shear_ratio():
     plt.legend()
     
 # ---- U6
-
+omega = epsmean/(Cmu*temean)
 L_t = np.power(temean, 1.5)/epsmean
+L_t = np.sqrt(temean)/(Cmu*omega)
 
 F_DES = (L_t/(0.61*dx))
 
@@ -407,7 +408,7 @@ zeta = 1
 dumeandy = np.gradient(umean, y)
 dumeandy2 = np.gradient(dumeandy, y)
 
-L_v_K_1D = kappa * dumeandy/dumeandy2
+L_v_K_1D = kappa * np.abs(dumeandy/dumeandy2)
 
 S_1D = np.sqrt(2)*dumeandy
 

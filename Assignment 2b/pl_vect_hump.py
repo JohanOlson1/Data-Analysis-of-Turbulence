@@ -90,7 +90,7 @@ y_2d=np.transpose(np.reshape(y,(nj,ni)))
 
 # ---- Test
 #uv_model = 2*u*v - u*v_inst -u_inst*v 
-uv_model_2d=np.transpose(np.reshape(uv_model,(nj,ni)))
+uv_model_2d=np.reshape(uv_model,(ni,nj))
 
 
 # set fk_2d=1 at upper boundary
@@ -321,41 +321,93 @@ empty, nu_t_mod_xy =dphidx_dy(x_2d_new,y_2d_new, visc_turb*dudy)
 nu_t_mod_yx, empty=dphidx_dy(x_2d_new,y_2d_new, visc_turb*dvdx)
 empty, nu_t_mod_yy =dphidx_dy(x_2d_new,y_2d_new, visc_turb*dvdy)
 
-shear_stress_model_x = np.abs(nu_t_mod_xx) + np.abs(nu_t_mod_xy)
+shear_stress_model_x = nu_t_mod_xx + nu_t_mod_xy
 shear_stress_model_y = np.abs(nu_t_mod_yx) + np.abs(nu_t_mod_yy)
 
 duudx, empty  =dphidx_dy(x_2d_new,y_2d_new, uu_2d)
 duvdx, duvdy  =dphidx_dy(x_2d_new,y_2d_new, uv_2d)
 empty, dvvdy  =dphidx_dy(x_2d_new,y_2d_new, vv_2d)
 
-shear_stress_resolved_x = np.abs(- duudx - duvdy)
+shear_stress_resolved_x = - duudx - duvdy
 shear_stress_resolved_y = np.abs(- duvdx - dvvdy)
     
 shear_stress_x_tot = shear_stress_model_x + shear_stress_resolved_x
 shear_stress_y_tot = shear_stress_model_y + shear_stress_resolved_y
 
-def shear_stress_ratio_x_contour_plot():
+def term_vx_resolved():
     plt.figure("Figure test 1")
     plt.clf() #clear the figure
-    plt.contourf(x_2d,y_2d, shear_stress_model_x/shear_stress_x_tot, 
-                 levels = np.linspace(0,1,30))
+    plt.contourf(x_2d,y_2d, shear_stress_resolved_x, 
+                 levels = np.linspace(-1,1,30))
     plt.xlabel("$x$")
     plt.ylabel("$y$")
     plt.axis([0.6,1.5,0,1])
-    plt.title("contour term 1 ratio $\\frac{resolved}{total}$")
+    plt.title("contour term  $resolved$")
     plt.colorbar()
 
-def shear_stress_ratio_y_contour_plot():
+def term_vx_modelled():
     plt.figure("Figure test 2")
     plt.clf() #clear the figure
-    plt.contourf(x_2d,y_2d, shear_stress_model_y/shear_stress_y_tot, 
-                 levels = np.linspace(0,1,30))
+    plt.contourf(x_2d,y_2d, shear_stress_model_x, 
+                 levels = np.linspace(-1,1,30))
     plt.xlabel("$x$")
     plt.ylabel("$y$")
     plt.axis([0.6,1.5,0,1])
-    plt.title("contour term 2 ratio $\\frac{resolved}{total}$")
+    plt.title("contour term $modelled$")
     plt.colorbar()
-
+    
+def term_vx_065():
+    plt.figure("Figure term1 065")
+    plt.clf() #clear the figure
+    xx=0.65;
+    i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
+    plt.plot(shear_stress_resolved_x[i1,:],y_2d[i1,:],'b-', label = 'resolved')
+    plt.plot(shear_stress_model_x[i1,:],y_2d[i1,:],'r-', label = 'modelled')
+    plt.xlabel("$v_x$ terms")
+    plt.ylabel("$y$")
+    plt.title("$x=0.65$")
+    plt.axis([-0.04, 1,np.min(y_2d[i1,0]), 1])
+    plt.legend()
+    
+def term_vx_080():
+    plt.figure("Figure term1 080")
+    plt.clf() #clear the figure
+    xx=0.80;
+    i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
+    plt.plot(shear_stress_resolved_x[i1,:],y_2d[i1,:],'b-', label = 'resolved')
+    plt.plot(shear_stress_model_x[i1,:],y_2d[i1,:],'r-', label = 'modelled')
+    plt.xlabel("$v_x$ terms")
+    plt.ylabel("$y$")
+    plt.title("$x=0.80$")
+    plt.axis([-0.04, 1,np.min(y_2d[i1,0]), 1])
+    plt.legend()
+    
+def term_vx_090():
+    plt.figure("Figure term1 090")
+    plt.clf() #clear the figure
+    xx=0.90;
+    i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
+    plt.plot(shear_stress_resolved_x[i1,:],y_2d[i1,:],'b-', label = 'resolved')
+    plt.plot(shear_stress_model_x[i1,:],y_2d[i1,:],'r-', label = 'modelled')
+    plt.xlabel("$v_x$ terms")
+    plt.ylabel("$y$")
+    plt.title("$x=0.90$")
+    plt.axis([-0.04, 1,np.min(y_2d[i1,0]), 1])
+    plt.legend()
+    
+def term_vx_130():
+    plt.figure("Figure term1 130")
+    plt.clf() #clear the figure
+    xx=1.30;
+    i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
+    plt.plot(shear_stress_resolved_x[i1,:],y_2d[i1,:],'b-', label = 'resolved')
+    plt.plot(shear_stress_model_x[i1,:],y_2d[i1,:],'r-', label = 'modelled')
+    plt.xlabel("$v_x$ terms")
+    plt.ylabel("$y$")
+    plt.title("$x=1.30$")
+    plt.axis([-0.04, 1,np.min(y_2d[i1,0]), 1])
+    plt.legend()
+    
 # ---- Extras Plots
 ################################ contour plot
 def contour():
@@ -443,11 +495,24 @@ label_overview.grid(row=0, column=3, sticky='nesw')
 button_nu_t_ratio = tk.Button(root, text= 'Nu_t ratio Contour Plot', command = nu_t_ratio_contour)
 button_nu_t_ratio.grid(row=1, column=3, sticky='nesw')
 
-button_shear_stress_ratio_x_contour_plot = tk.Button(root, text= 'Shear Stress Ratio x Contour', command = shear_stress_ratio_x_contour_plot)
+button_shear_stress_ratio_x_contour_plot = tk.Button(root, text= 'term_vx_resolved', command = term_vx_resolved)
 button_shear_stress_ratio_x_contour_plot.grid(row=2, column=3, sticky='nesw')
 
-button_shear_stress_ratio_y_contour_plot = tk.Button(root, text= 'Shear Stress Ratio y Contour', command = shear_stress_ratio_y_contour_plot)
+button_shear_stress_ratio_y_contour_plot = tk.Button(root, text= 'term_vx_modelled', command = term_vx_modelled)
 button_shear_stress_ratio_y_contour_plot.grid(row=3, column=3, sticky='nesw')
+
+button_terms_065 = tk.Button(root, text= 'Terms x=0.65', command = term_vx_065)
+button_terms_065.grid(row=4, column=3, sticky='nesw')
+
+button_terms_080 = tk.Button(root, text= 'Terms x=0.80', command = term_vx_080)
+button_terms_080.grid(row=5, column=3, sticky='nesw')
+
+button_terms_090 = tk.Button(root, text= 'Terms x=0.90', command = term_vx_090)
+button_terms_090.grid(row=6, column=3, sticky='nesw')
+
+button_terms_130 = tk.Button(root, text= 'Terms x=1.30', command = term_vx_130)
+button_terms_130.grid(row=7, column=3, sticky='nesw')
+
 
 # Extra Plots
 button_contour = tk.Button(root, text= 'Contour Plot', command = contour)
