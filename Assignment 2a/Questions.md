@@ -14,7 +14,7 @@
 
   - Wierd for F_DES? 
 
-- [ ] U7
+- [x] U7
 
   - O(x^1)
   - Lengthscales looks Wierd?

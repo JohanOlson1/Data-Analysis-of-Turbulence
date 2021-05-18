@@ -1,6 +1,8 @@
 import scipy.io as sio
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+from matplotlib import cm 
 import tkinter as tk
 from dphidx_dy import dphidx_dy
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
@@ -21,7 +23,7 @@ nim1=ni-1
 njm1=nj-1
 
 # read data file
-vectz=np.genfromtxt("vectz_aiaa_paper.dat",comments="%")
+vectz=np.genfromtxt("vectz_aiaa_journal.dat",comments="%")
 ntstep=vectz[0]
 n=len(vectz)
 
@@ -334,26 +336,29 @@ shear_stress_resolved_y = np.abs(- duvdx - dvvdy)
 shear_stress_x_tot = shear_stress_model_x + shear_stress_resolved_x
 shear_stress_y_tot = shear_stress_model_y + shear_stress_resolved_y
 
+#np.linspace(0,1,5)
 def term_vx_resolved():
     plt.figure("Figure test 1")
     plt.clf() #clear the figure
-    plt.contourf(x_2d,y_2d, shear_stress_resolved_x, 
-                 levels = np.linspace(-1,1,30))
+    plt.contourf(x_2d,y_2d, np.abs(shear_stress_resolved_x), 
+                 levels = np.linspace(0,1,30),
+                 cmap = cm.viridis, extend ='max')
     plt.xlabel("$x$")
     plt.ylabel("$y$")
     plt.axis([0.6,1.5,0,1])
-    plt.title("contour term  $resolved$")
+    plt.title("contour term $v_x$ resolved")
     plt.colorbar()
-
+    
 def term_vx_modelled():
     plt.figure("Figure test 2")
     plt.clf() #clear the figure
-    plt.contourf(x_2d,y_2d, shear_stress_model_x, 
-                 levels = np.linspace(-1,1,30))
+    plt.contourf(x_2d,y_2d, np.abs(shear_stress_model_x), 
+                 levels = np.linspace(0,1,30),
+                 cmap = cm.viridis, extend ='max')
     plt.xlabel("$x$")
     plt.ylabel("$y$")
     plt.axis([0.6,1.5,0,1])
-    plt.title("contour term $modelled$")
+    plt.title("contour term $v_x$ modelled")
     plt.colorbar()
     
 def term_vx_065():

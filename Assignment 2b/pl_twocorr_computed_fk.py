@@ -37,7 +37,7 @@ w_time=np.delete(w_time, idelete)
 w_y_z_t= np.reshape(w_time,(nt,nj,nk))
 # swap axis
 w_y_z_t_65= np.swapaxes(w_y_z_t,0,2)  # the order of the indices are (k,j,t)
-
+w_y_z_t_65= np.swapaxes(w_y_z_t_65,0,1)
 
 
 
@@ -60,7 +60,7 @@ w_time=np.delete(w_time, idelete)
 w_y_z_t= np.reshape(w_time,(nt,nj,nk))
 # swap axis
 w_y_z_t_80= np.swapaxes(w_y_z_t,0,2)
-
+w_y_z_t_80= np.swapaxes(w_y_z_t_80,0,1)
 
 
 
@@ -83,6 +83,8 @@ w_time=np.delete(w_time, idelete)
 w_y_z_t= np.reshape(w_time,(nt,nj,nk))
 # swap axis
 w_y_z_t_110= np.swapaxes(w_y_z_t,0,2)
+w_y_z_t_110= np.swapaxes(w_y_z_t_110,0,1)
+
 
 # x=1.3 
 w_time = np.loadtxt("w_time_z130.dat")
@@ -103,7 +105,7 @@ w_time=np.delete(w_time, idelete)
 w_y_z_t= np.reshape(w_time,(nt,nj,nk))
 # swap axis
 w_y_z_t_130= np.swapaxes(w_y_z_t,0,2)
-
+w_y_z_t_130= np.swapaxes(w_y_z_t_130,0,1)
 
 xy= np.loadtxt("hump_grid_nasa_les_coarse_noflow.dat")
 x1=xy[:,0]
@@ -143,5 +145,20 @@ for jj in range (0,nj):
       yp2d[ii,jj]=0.25*(y_2d[i,j]+y_2d[im1,j]+y_2d[i,jm1]+y_2d[im1,jm1])
 
 z = np.linspace(0,0.1,nk)
+
+B33_10 = np.zeros(nk)
+j=0
+
+for k in range(nk):
+    for m in range(nk):
+        for n in range(nt):
+            B33_10[k] += w_y_z_t_65[j, m, n]*w_y_z_t_65[j, k, n]/nt  
+    
+B33_10[:] /= B33_10[0]
+
+dz = 0.2/16
+L_int = np.trapz(B33_10)*dz
+
+
 
 

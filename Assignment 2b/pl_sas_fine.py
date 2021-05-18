@@ -295,10 +295,12 @@ ubis=(termu+termv+termw)**0.5
 
 ubis_b=(termu_b+termv_b+termw_b)**0.5
 
-L_vk3d=0.4*ss/ubis
-L_vk3d_b=0.4*ss/ubis_b
+kappa = 0.41
+L_vk3d=kappa*ss/ubis
+L_vk3d_b=kappa*ss/ubis_b
 
-L_vk3d_spanz=np.mean(L_vk3d, axis=(2))
+L_vk3d_spanz=np.mean(L_vk3d[1:-2,1:-2,1:-2], axis=(2))
+L_vk3d_b_spanz=np.mean(L_vk3d_b[1:-2,1:-2,1:-2], axis=(2))
 
 # read mean velocities
 # read data file
@@ -330,6 +332,83 @@ d2vdx2_mean,dummy=dphidx_dy(x_2d,y_2d,dvdx_mean)
 
 dummy,d2vdy2_mean=dphidx_dy(x_2d,y_2d,dvdy_mean)
 
+s11_mean=dudx_mean
+s12_mean=0.5*(dudy_mean+dvdx_mean)
+s21_mean=s12_mean
+s22_mean=dvdy_mean
+
+ss_mean=(2*(s11_mean**2+s12_mean**2+s21_mean**2+s22_mean**2)**0.5)
+
+termu_mean=(d2udx2_mean+d2udy2_mean)**2
+termv_mean=(d2vdx2_mean+d2vdy2_mean)**2
+
+ubis_mean=(termu_mean+termv_mean)**0.5
+
+L_vk1d=kappa*ss_mean/ubis_mean
+
+C_DES = 0.65
+
+L_DES = C_DES*np.maximum(x_2d, y_2d)
+
+def Lvk_065():
+    plt.figure("Figure 065")
+    plt.clf() #clear the figure
+    xx=0.65;
+    i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
+    plt.plot(L_vk1d[i1,0:-1], y_2d[i1,:],'r-', label = '1D')
+    plt.plot(L_vk3d_spanz[i1,:], y_2d[i1,1:-1],'b-', label = '3D')
+    plt.plot(L_vk3d_b_spanz[i1,:], y_2d[i1,1:-1],'g-', label = '3D Alt.') 
+    plt.plot(L_DES[i1,0:-1], y_2d[i1,0:-1],'k-', label = '$C_{DES}\\Delta$')
+    plt.xlabel("Length Scales")
+    plt.ylabel("$y$")
+    plt.title("$x=0.65$")
+    plt.axis([0, 1, np.min(y_2d[i1,0]), 0.3])
+    plt.legend()
+    
+def Lvk_080():
+    plt.figure("Figure 080")
+    plt.clf() #clear the figure
+    xx=0.80;
+    i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
+    plt.plot(L_vk1d[i1,0:-1], y_2d[i1,:],'r-', label = '1D')
+    plt.plot(L_vk3d_spanz[i1,:], y_2d[i1,1:-1],'b-', label = '3D')
+    plt.plot(L_vk3d_b_spanz[i1,:], y_2d[i1,1:-1],'g-', label = '3D Alt.') 
+    plt.plot(L_DES[i1,0:-1], y_2d[i1,0:-1],'k-', label = '$C_{DES}\\Delta$')
+    plt.xlabel("$L_{vK,3D}$")
+    plt.ylabel("$y$")
+    plt.title("$x=0.80$")
+    plt.axis([0, 1, np.min(y_2d[i1,0]), 0.3])
+    plt.legend()
+    
+def Lvk_090():
+    plt.figure("Figure 090")
+    plt.clf() #clear the figure
+    xx=0.90;
+    i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
+    plt.plot(L_vk1d[i1,0:-1], y_2d[i1,:],'r-', label = '1D')
+    plt.plot(L_vk3d_spanz[i1,:], y_2d[i1,1:-1],'b-', label = '3D')
+    plt.plot(L_vk3d_b_spanz[i1,:], y_2d[i1,1:-1],'g-', label = '3D Alt.') 
+    plt.plot(L_DES[i1,0:-1], y_2d[i1,0:-1],'k-', label = '$C_{DES}\\Delta$')
+    plt.xlabel("$L_{vK,3D}$")
+    plt.ylabel("$y$")
+    plt.title("$x=0.90$")
+    plt.axis([0, 1, np.min(y_2d[i1,0]), 0.3])
+    plt.legend()
+
+def Lvk_130():
+    plt.figure("Figure 130")
+    plt.clf() #clear the figure
+    xx=1.30;
+    i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
+    plt.plot(L_vk1d[i1,0:-1], y_2d[i1,:],'r-', label = '1D')
+    plt.plot(L_vk3d_spanz[i1,:], y_2d[i1,1:-1],'b-', label = '3D')
+    plt.plot(L_vk3d_b_spanz[i1,:], y_2d[i1,1:-1],'g-', label = '3D Alt.') 
+    plt.plot(L_DES[i1,0:-1], y_2d[i1,0:-1],'k-', label = '$C_{DES}\\Delta$')
+    plt.xlabel("$L_{vK,3D}$")
+    plt.ylabel("$y$")
+    plt.title("$x=1.30$")
+    plt.axis([0, 1, np.min(y_2d[i1,0]), 0.3])
+    plt.legend()
 
 def close_fig():
     plt.close()
@@ -343,10 +422,17 @@ close_button.grid(row=0, column=0)
 label_overview = tk.Label(text="V.6", background="grey")
 label_overview.grid(row=0, column=1, sticky='nesw')
 
-# =============================================================================
-# button_u_plot = tk.Button(root, text= 'u plot', command = u_plot)
-# button_u_plot.grid(row=1, column=1, sticky='nesw')
-# =============================================================================
+button_Lvk_065 = tk.Button(root, text= 'Lvk_065', command = Lvk_065)
+button_Lvk_065.grid(row=1, column=1, sticky='nesw')
+
+button_Lvk_080 = tk.Button(root, text= 'Lvk_080', command = Lvk_080)
+button_Lvk_080.grid(row=2, column=1, sticky='nesw')
+
+button_Lvk_090 = tk.Button(root, text= 'Lvk_090', command = Lvk_090)
+button_Lvk_090.grid(row=3, column=1, sticky='nesw')
+
+button_Lvk_130 = tk.Button(root, text= 'Lvk_130', command = Lvk_130)
+button_Lvk_130.grid(row=4, column=1, sticky='nesw')
 
 root.mainloop()
 

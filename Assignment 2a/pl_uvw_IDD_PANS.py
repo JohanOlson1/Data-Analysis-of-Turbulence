@@ -366,9 +366,10 @@ def turbulent_shear_ratio():
     plt.legend()
     
 # ---- U6
-omega = epsmean/(Cmu*temean)
+omega = eps3d/(Cmu*te3d)
+omega_mean = epsmean/(Cmu*temean)
 L_t = np.power(temean, 1.5)/epsmean
-L_t = np.sqrt(temean)/(Cmu*omega)
+L_t = np.sqrt(temean)/(Cmu*omega_mean)
 
 F_DES = (L_t/(0.61*dx))
 
@@ -410,12 +411,6 @@ dumeandy2 = np.gradient(dumeandy, y)
 
 L_v_K_1D = kappa * np.abs(dumeandy/dumeandy2)
 
-S_1D = np.sqrt(2)*dumeandy
-
-L_1D = (Cmu**(3/4))*np.multiply(np.power(temean, 3/2), epsmean)
-
-T_1D = zeta*kappa*np.power(S_1D, 2)*L_1D/L_v_K_1D
-
 # 3D
 
 # u
@@ -437,87 +432,80 @@ dwdydx, dwdy2, dwdydz = np.gradient(dwdy,dx,y,dz)
 
 dwdzdx, dwdzdy, dwdz2 = np.gradient(dwdz,dx,y,dz)
 
-# Partials
-Lambda1 = dudx2 + dudy2 + dudz2
-Lambda2 = dvdx2 + dvdy2 + dvdz2
-Lambda3 = dwdx2 + dwdy2 + dwdz2
+# L calc.
 
-Gamma1 = dudx2 + dudy2 + dudz2
-Gamma2 = dvdx2 + dvdy2 + dvdz2
-Gamma3 = dwdx2 + dwdy2 + dwdz2
+s11=dudx
+s12=0.5*(dudy+dvdx)
+s13=0.5*(dudz+dwdx)
+s21=s12
+s22=dvdy
+s23=0.5*(dvdz+dwdy)
+s31=s13
+s32=s23
+s33=dwdz
 
+ss=(2*(s11**2+s12**2+s13**2+s21**2+s22**2+s23**2+s31**2+s32**2+s33**2)**0.5)
+      
+termu=(dudx2+dudy2+dudz2)**2
+termv=(dvdx2+dvdy2+dvdz2)**2
+termw=(dwdx2+dwdy2+dwdz2)**2
 
-S = np.zeros((ni,nj,nk))
-Ubiss_1 = np.zeros((ni,nj,nk))
+ubis=(termu+termv+termw)**0.5
 
-for i in range(ni):
-    for j in range(nj):
-        for k in range(nk):
-            S[i,j,k] += dudx[i,j,k]*dudx[i,j,k]
-            S[i,j,k] += dudy[i,j,k]*dudy[i,j,k]
-            S[i,j,k] += dudz[i,j,k]*dudz[i,j,k]
-            S[i,j,k] += dvdx[i,j,k]*dvdx[i,j,k]
-            S[i,j,k] += dvdy[i,j,k]*dvdy[i,j,k]
-            S[i,j,k] += dvdz[i,j,k]*dvdz[i,j,k]
-            S[i,j,k] += dwdx[i,j,k]*dwdx[i,j,k]
-            S[i,j,k] += dwdy[i,j,k]*dwdy[i,j,k]
-            S[i,j,k] += dwdz[i,j,k]*dwdz[i,j,k]
-            
-            Ubiss_1[i,j,k] += Gamma1[i,j,k]*Lambda1[i,j,k]
-            Ubiss_1[i,j,k] += Gamma2[i,j,k]*Lambda2[i,j,k]
-            Ubiss_1[i,j,k] += Gamma3[i,j,k]*Lambda3[i,j,k]
-            
-for i in range(ni):
-    for j in range(nj):
-        for k in range(nk):
-            S[i,j,k] = np.sqrt(2*S[i,j,k])            
-            Ubiss_1[i,j,k] = np.sqrt(Ubiss_1[i,j,k]) 
+L_v_K_3D = kappa*ss/ubis
 
-L_v_K_3D = kappa*np.abs(np.divide(S, Ubiss_1))
+# L calc. alternative
 
-L = (Cmu**(3/4))*np.multiply(np.power(te3d, 3/2), eps3d)
+termu_alt=dudx2**2+dudy2**2+2*dudxdy**2
+termv_alt=dvdx2**2+dvdy2**2+2*dvdxdy**2
+termw_alt=dwdx2**2+dwdy2**2+2*dwdxdy**2
 
-#T_1_3D_1 = zeta*kappa*np.divide(np.multiply(np.multiply(S,S), L), L_v_K_3D) 
+ubis_alt=(termu_alt+termv_alt+termw_alt)**0.5
 
-# Alternative
-
-Ubiss_2 = np.zeros((ni,nj,nk))
-
-for i in range(ni):
-    for j in range(nj):
-        for k in range(nk):
-            Ubiss_2[i,j,k] += dudx2[i,j,k] + dudxdy[i,j,k] + dudxdz[i,j,k]
-            Ubiss_2[i,j,k] += dudydx[i,j,k] + dudy2[i,j,k] + dudydz[i,j,k]
-            Ubiss_2[i,j,k] += dudzdx[i,j,k] + dudzdy[i,j,k] + dudz2[i,j,k]
-            Ubiss_2[i,j,k] += dvdx2[i,j,k] + dvdxdy[i,j,k] + dvdxdz[i,j,k]
-            Ubiss_2[i,j,k] += dvdydx[i,j,k] + dvdy2[i,j,k] + dvdydz[i,j,k]
-            Ubiss_2[i,j,k] += dvdzdx[i,j,k] + dvdzdy[i,j,k] + dvdz2[i,j,k]
-            Ubiss_2[i,j,k] += dwdx2[i,j,k] + dwdxdy[i,j,k] + dwdxdz[i,j,k]
-            Ubiss_2[i,j,k] += dwdydx[i,j,k] + dwdy2[i,j,k] + dwdydz[i,j,k]
-            Ubiss_2[i,j,k] += dwdzdx[i,j,k] + dwdzdy[i,j,k] + dwdz2[i,j,k]
-            
-for i in range(ni):
-    for j in range(nj):
-        for k in range(nk):
-            S[i,j,k] = np.sqrt(2*S[i,j,k])            
-
-L_v_K_3D_alt = kappa*np.abs(np.divide(S, Ubiss_2))
+L_v_K_3D_alt = kappa*ss/ubis_alt
 
 # Plot
 L_v_K_3D_mean = np.mean(L_v_K_3D , axis=(0,2))
 L_v_K_3D_mean_alt = np.mean(L_v_K_3D_alt , axis=(0,2))
 
 def length_scale_compare():
-    plt.figure("Length_scale_comparison")
+    plt.figure("Comparison of Length Scales")
     plt.plot(yplus, L_v_K_1D , label='1D')
     plt.plot(yplus, L_v_K_3D_mean , label='3D')
     plt.plot(yplus, L_v_K_3D_mean_alt , label='3D Alternative')
-    plt.title('Length_scale_compare')
-    plt.axis([0, 5200, 0, 0.5])
-    plt.ylabel("Length Scale")
+    plt.title('Comparison of Length Scales')
+    plt.axis([0, 5200, 0, 0.85])
+    plt.ylabel("Von Kármán Length Scale")
     plt.xlabel("$y^+$")
     plt.legend()
-    
+
+# T1
+
+# 1D
+
+L = (te3d**0.5)/(omega*Cmu**0.25)
+Lmean = np.mean(L , axis=(0,2))
+
+T_1_1D = zeta*kappa*(dumeandy**2)*(Lmean/L_v_K_1D)
+# 3D
+T_1_3D = zeta*kappa*(ss**2)*(L/L_v_K_3D)
+# 3D alt
+T_1_3D_alt = zeta*kappa*(ss**2)*(L/L_v_K_3D_alt)
+
+T_1_3D_mean = np.mean(T_1_3D, axis=(0,2))
+T_1_3D_alt_mean = np.mean(T_1_3D_alt, axis=(0,2))
+
+def time_scale_compare():
+    plt.figure("Comparison of $T_1$ Scales")
+    plt.plot(yplus, T_1_1D , label='1D')
+    plt.plot(yplus, T_1_3D_mean , label='3D')
+    plt.plot(yplus, T_1_3D_alt_mean , label='3D Alternative')
+    plt.title('Comparison of $T_1$')
+    plt.axis([0, 5200, 0, 5000])
+    plt.ylabel("$T_1$")
+    plt.xlabel("$y^+$")
+    plt.legend()
+
 # ---- GUI Append
 
 def close_fig():
@@ -582,6 +570,9 @@ label_overview.grid(row=0, column=6, sticky='nesw')
 
 button_length_scale_compare = tk.Button(root, text= 'Length_scale_compare', command = length_scale_compare)
 button_length_scale_compare.grid(row=1, column=6, sticky='nesw')
+
+button_time_scale_compare = tk.Button(root, text= 'T_1_scale_compare', command = time_scale_compare)
+button_time_scale_compare.grid(row=2, column=6, sticky='nesw')
 
 root.mainloop()
 
