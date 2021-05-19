@@ -428,11 +428,11 @@ def check_contour_plot():
 # V.7
 
 nu_t = vis_2d-viscos
-
+ratio_nu = np.abs(nu_t[:-1,:-1])/viscos
 def nu_t_ratio():
     plt.figure("V.7.1")
     plt.clf() #clear the figure
-    plt.contourf(x_2d,y_2d, np.abs(nu_t[:-1,:-1])/viscos, 
+    plt.contourf(x_2d,y_2d, ratio_nu, 
                  levels = np.linspace(0, 10,30),
                  cmap = cm.viridis, extend ='max')
     plt.xlabel("$x$")
@@ -471,6 +471,53 @@ def k_plot():
     plt.axis([0.6,1.5, 0, 1])
     plt.title("$\\frac{k_{resolved}}{k_{tot}}$")
     plt.colorbar()
+    
+delta_layer = np.zeros(ni-1)
+for i in range(ni-1):
+    for j in reversed(range(nj-1)):
+        if 1.0 < ratio_nu[i,j]:
+            delta_layer[i] = y_2d[i,j]-y_2d[i,0]
+            break
+
+def delta_layer_plot():
+    plt.figure("Delta layer plot")
+    plt.clf() #clear the figure
+    plt.plot(x_2d[:,0], delta_layer, 'k-')
+    plt.xlabel("$x$")
+    plt.ylabel("$y-y_{wall}$")
+    plt.axis([0.6,1.5,0, 0.3])
+    plt.title("$\\delta$")
+
+
+delta_layer_2d = np.zeros((ni-1,nj-1))
+for j in range(nj-1):
+    delta_layer_2d[:,j] = delta_layer
+    
+res_dx = delta_layer_2d/dx
+res_dz = delta_layer/dz
+
+def res_dx_contour():
+    plt.figure("V.7.6 res_dx")
+    plt.clf() #clear the figure
+    plt.contourf(x_2d,y_2d, res_dx, 
+                 levels = np.linspace(10, 20,30),
+                 cmap = cm.viridis, extend ='both')
+    plt.xlabel("$x$")
+    plt.ylabel("$y$")
+    plt.axis([0.6,1.5, 0, 1])
+    plt.title("Resolution $x_1$")
+    plt.colorbar()
+
+def res_dz_line():
+    plt.figure("V.7.6 res_dz")
+    plt.clf() #clear the figure
+    plt.plot(x_2d[:,0], res_dz, 'r-')
+    plt.plot(x_2d[:,0], 20*np.ones(ni-1), 'k-')
+    plt.plot(x_2d[:,0], 40*np.ones(ni-1), 'k-')
+    plt.xlabel("$x$")
+    plt.ylabel("Resolution")
+    plt.axis([0.6,1.5, 10, 50])
+    plt.title("Resolution $x_3$")
 
 def close_fig():
     plt.close()
@@ -536,5 +583,14 @@ button_V_7_2.grid(row=2, column=3, sticky='nesw')
 
 button_V_7_3 = tk.Button(root, text= 'V.7.3 ', command = k_plot)
 button_V_7_3.grid(row=3, column=3, sticky='nesw')
+
+button_V_7_6 = tk.Button(root, text= 'V.7.6 ', command = delta_layer_plot)
+button_V_7_6.grid(row=4, column=3, sticky='nesw')
+
+button_V_7_6_dx = tk.Button(root, text= 'V.7.6 dx', command = res_dx_contour)
+button_V_7_6_dx.grid(row=5, column=3, sticky='nesw')
+
+button_V_7_6_dz = tk.Button(root, text= 'V.7.6 dz', command = res_dz_line)
+button_V_7_6_dz.grid(row=6, column=3, sticky='nesw')
 
 root.mainloop()

@@ -23,7 +23,7 @@ nim1=ni-1
 njm1=nj-1
 
 # read data file
-vectz=np.genfromtxt("vectz_aiaa_journal.dat",comments="%")
+vectz=np.genfromtxt("vectz_aiaa_paper.dat",comments="%")
 ntstep=vectz[0]
 n=len(vectz)
 
@@ -168,7 +168,7 @@ def vv090():
     plt.plot(x090_off[:,5],x090_off[:,1],'bo')
     plt.xlabel("$\overline{v'v'}$")
     plt.ylabel("$y$")
-    plt.title("$x=0.80$")
+    plt.title("$x=0.90$")
     plt.axis([0, 0.05,np.min(y_2d[i1,0]),0.3])
     
 #*************************
@@ -304,11 +304,21 @@ def compare_uv100():
     plt.title("$x=1.00$")
     plt.axis([-0.04, 0.02,np.min(y_2d[i1,0]), y_2d[i1,counter_100]]) 
     plt.legend()
+
+def shear_ratio_plot():
+    plt.figure("Figure shear ratio")
+    plt.clf() #clear the figure
+    plt.contourf(x_2d,y_2d, np.abs(uv_2d)/(np.abs(uv_2d) + np.abs(uv_model_2d)), np.linspace(0,1,50))
+    plt.xlabel("$x$")
+    plt.ylabel("$y$")
+    plt.axis([0.6,1.5,0,1])
+    plt.title("contour $\\frac{uv_r}{uv_{tot}}$")
+    plt.colorbar()
     
 # ---- V.3
 
 def nu_t_ratio_contour():
-    plt.figure("Figure shear ratio")
+    plt.figure("Figure nu ratio")
     plt.clf() #clear the figure
     plt.contourf(x_2d,y_2d, visc_turb/viscos, 50)
     plt.xlabel("$x$")
@@ -359,6 +369,18 @@ def term_vx_modelled():
     plt.ylabel("$y$")
     plt.axis([0.6,1.5,0,1])
     plt.title("contour term $v_x$ modelled")
+    plt.colorbar()
+    
+def term_vx_ratio():
+    plt.figure("Figure test 3")
+    plt.clf() #clear the figure
+    plt.contourf(x_2d,y_2d, np.abs(shear_stress_model_x)/(np.abs(shear_stress_model_x)+np.abs(shear_stress_resolved_x)), 
+                 levels = np.linspace(0,1,30),
+                 cmap = cm.viridis, extend ='max')
+    plt.xlabel("$x$")
+    plt.ylabel("$y$")
+    plt.axis([0.6,1.5,0,1])
+    plt.title("contour term $v_x$ ratio")
     plt.colorbar()
     
 def term_vx_065():
@@ -492,6 +514,9 @@ button_compare_uv065.grid(row=1, column=2, sticky='nesw')
 button_compare_uv100 = tk.Button(root, text= 'Comparison uv100', command = compare_uv100)
 button_compare_uv100.grid(row=2, column=2, sticky='nesw')
 
+button_compare_ratio = tk.Button(root, text= 'Comparison ratio', command = shear_ratio_plot)
+button_compare_ratio.grid(row=3, column=2, sticky='nesw')
+
 # V.3
 
 label_overview = tk.Label(text="V.3", background="grey")
@@ -518,6 +543,8 @@ button_terms_090.grid(row=6, column=3, sticky='nesw')
 button_terms_130 = tk.Button(root, text= 'Terms x=1.30', command = term_vx_130)
 button_terms_130.grid(row=7, column=3, sticky='nesw')
 
+button_term_vx_ratio = tk.Button(root, text= 'Term ratio', command = term_vx_ratio)
+button_term_vx_ratio.grid(row=8, column=3, sticky='nesw')
 
 # Extra Plots
 button_contour = tk.Button(root, text= 'Contour Plot', command = contour)

@@ -78,91 +78,89 @@ v3d2= np.reshape(tt,(ni,nj,nk))
 uvw = sio.loadmat('w2_pans_iddes.mat')
 tt=uvw['w2_pans_iddes']
 w3d2= np.reshape(tt,(ni,nj,nk))
-# =============================================================================
-# 
-# #  read v_3 & transform v_3 to a 3D array (file 3)
-# uvw = sio.loadmat('u3_pans_iddes.mat')
-# tt=uvw['u3_pans_iddes']
-# u3d3= np.reshape(tt,(ni,nj,nk))
-# 
-# uvw = sio.loadmat('v3_pans_iddes.mat')
-# tt=uvw['v3_pans_iddes']
-# v3d3= np.reshape(tt,(ni,nj,nk))
-# 
-# uvw = sio.loadmat('w3_pans_iddes.mat')
-# tt=uvw['w3_pans_iddes']
-# w3d3= np.reshape(tt,(ni,nj,nk))
-# 
-# #  read v_4 & transform v_4 to a 3D array (file 4)
-# uvw = sio.loadmat('u4_pans_iddes.mat')
-# tt=uvw['u4_pans_iddes']
-# u3d4= np.reshape(tt,(ni,nj,nk))
-# 
-# uvw = sio.loadmat('v4_pans_iddes.mat')
-# tt=uvw['v4_pans_iddes']
-# v3d4= np.reshape(tt,(ni,nj,nk))
-# 
-# uvw = sio.loadmat('w4_pans_iddes.mat')
-# tt=uvw['w4_pans_iddes']
-# w3d4= np.reshape(tt,(ni,nj,nk))
-# 
-# #  read v_5 & transform v_5 to a 3D array (file 5)
-# uvw = sio.loadmat('u5_pans_iddes.mat')
-# tt=uvw['u5_pans_iddes']
-# u3d5= np.reshape(tt,(ni,nj,nk))
-# 
-# uvw = sio.loadmat('v5_pans_iddes.mat')
-# tt=uvw['v5_pans_iddes']
-# v3d5= np.reshape(tt,(ni,nj,nk))
-# 
-# uvw = sio.loadmat('w5_pans_iddes.mat')
-# tt=uvw['w5_pans_iddes']
-# w3d5= np.reshape(tt,(ni,nj,nk))
-# 
-# #  read v_6 & transform v_6 to a 3D array (file 6)
-# uvw = sio.loadmat('u6_pans_iddes.mat')
-# tt=uvw['u6_pans_iddes']
-# u3d6= np.reshape(tt,(ni,nj,nk))
-# 
-# uvw = sio.loadmat('v6_pans_iddes.mat')
-# tt=uvw['v6_pans_iddes']
-# v3d6= np.reshape(tt,(ni,nj,nk))
-# 
-# uvw = sio.loadmat('w6_pans_iddes.mat')
-# tt=uvw['w6_pans_iddes']
-# w3d6= np.reshape(tt,(ni,nj,nk))
-# 
-# #  read v_7 & transform v_7 to a 3D array (file 7)
-# uvw = sio.loadmat('u7_pans_iddes.mat')
-# tt=uvw['u7_pans_iddes']
-# u3d7= np.reshape(tt,(ni,nj,nk))
-# 
-# uvw = sio.loadmat('v7_pans_iddes.mat')
-# tt=uvw['v7_pans_iddes']
-# v3d7= np.reshape(tt,(ni,nj,nk))
-# 
-# uvw = sio.loadmat('w7_pans_iddes.mat')
-# tt=uvw['w7_pans_iddes']
-# w3d7= np.reshape(tt,(ni,nj,nk))
-# 
-# #  read v_8 & transform v_8 to a 3D array (file 8)
-# uvw = sio.loadmat('u8_pans_iddes.mat')
-# tt=uvw['u8_pans_iddes']
-# u3d8= np.reshape(tt,(ni,nj,nk))
-# 
-# uvw = sio.loadmat('v8_pans_iddes.mat')
-# tt=uvw['v8_pans_iddes']
-# v3d8= np.reshape(tt,(ni,nj,nk))
-# 
-# uvw = sio.loadmat('w8_pans_iddes.mat')
-# tt=uvw['w8_pans_iddes']
-# w3d8= np.reshape(tt,(ni,nj,nk))
-# 
-# =============================================================================
+
+#  read v_3 & transform v_3 to a 3D array (file 3)
+uvw = sio.loadmat('u3_pans_iddes.mat')
+tt=uvw['u3_pans_iddes']
+u3d3= np.reshape(tt,(ni,nj,nk))
+
+uvw = sio.loadmat('v3_pans_iddes.mat')
+tt=uvw['v3_pans_iddes']
+v3d3= np.reshape(tt,(ni,nj,nk))
+
+uvw = sio.loadmat('w3_pans_iddes.mat')
+tt=uvw['w3_pans_iddes']
+w3d3= np.reshape(tt,(ni,nj,nk))
+
+#  read v_4 & transform v_4 to a 3D array (file 4)
+uvw = sio.loadmat('u4_pans_iddes.mat')
+tt=uvw['u4_pans_iddes']
+u3d4= np.reshape(tt,(ni,nj,nk))
+
+uvw = sio.loadmat('v4_pans_iddes.mat')
+tt=uvw['v4_pans_iddes']
+v3d4= np.reshape(tt,(ni,nj,nk))
+
+uvw = sio.loadmat('w4_pans_iddes.mat')
+tt=uvw['w4_pans_iddes']
+w3d4= np.reshape(tt,(ni,nj,nk))
+
+#  read v_5 & transform v_5 to a 3D array (file 5)
+uvw = sio.loadmat('u5_pans_iddes.mat')
+tt=uvw['u5_pans_iddes']
+u3d5= np.reshape(tt,(ni,nj,nk))
+
+uvw = sio.loadmat('v5_pans_iddes.mat')
+tt=uvw['v5_pans_iddes']
+v3d5= np.reshape(tt,(ni,nj,nk))
+
+uvw = sio.loadmat('w5_pans_iddes.mat')
+tt=uvw['w5_pans_iddes']
+w3d5= np.reshape(tt,(ni,nj,nk))
+
+#  read v_6 & transform v_6 to a 3D array (file 6)
+uvw = sio.loadmat('u6_pans_iddes.mat')
+tt=uvw['u6_pans_iddes']
+u3d6= np.reshape(tt,(ni,nj,nk))
+
+uvw = sio.loadmat('v6_pans_iddes.mat')
+tt=uvw['v6_pans_iddes']
+v3d6= np.reshape(tt,(ni,nj,nk))
+
+uvw = sio.loadmat('w6_pans_iddes.mat')
+tt=uvw['w6_pans_iddes']
+w3d6= np.reshape(tt,(ni,nj,nk))
+
+#  read v_7 & transform v_7 to a 3D array (file 7)
+uvw = sio.loadmat('u7_pans_iddes.mat')
+tt=uvw['u7_pans_iddes']
+u3d7= np.reshape(tt,(ni,nj,nk))
+
+uvw = sio.loadmat('v7_pans_iddes.mat')
+tt=uvw['v7_pans_iddes']
+v3d7= np.reshape(tt,(ni,nj,nk))
+
+uvw = sio.loadmat('w7_pans_iddes.mat')
+tt=uvw['w7_pans_iddes']
+w3d7= np.reshape(tt,(ni,nj,nk))
+
+#  read v_8 & transform v_8 to a 3D array (file 8)
+uvw = sio.loadmat('u8_pans_iddes.mat')
+tt=uvw['u8_pans_iddes']
+u3d8= np.reshape(tt,(ni,nj,nk))
+
+uvw = sio.loadmat('v8_pans_iddes.mat')
+tt=uvw['v8_pans_iddes']
+v3d8= np.reshape(tt,(ni,nj,nk))
+
+uvw = sio.loadmat('w8_pans_iddes.mat')
+tt=uvw['w8_pans_iddes']
+w3d8= np.reshape(tt,(ni,nj,nk))
+
 # merge 2 files. This means than new nk = 2*nk
-u3d=np.concatenate((u3d1, u3d2), axis=2)
-v3d=np.concatenate((v3d1, v3d2), axis=2)
-w3d=np.concatenate((w3d1, w3d2), axis=2)
+u3d=np.concatenate((u3d1, u3d2, u3d3, u3d4, u3d5, u3d6, u3d7, u3d8), axis=2)
+v3d=np.concatenate((v3d1, v3d2, v3d3, v3d4, v3d5, v3d6, v3d7, v3d8), axis=2)
+w3d=np.concatenate((w3d1, w3d2, w3d3, w3d4, w3d5, w3d6, w3d7, w3d8), axis=2)
 
 idum,idum,nk=u3d.shape
 
