@@ -385,7 +385,7 @@ def d_boundary_alt_plot():
     plt.plot(x_2d[:,0], y_boundary_alt, 'k-')
     plt.xlabel("$x$")
     plt.ylabel("$y-y_{wall}$")
-    plt.axis([0.6,1.5,0, 0.2])
+    plt.axis([0.6,1.5,0, 0.5])
     plt.title("Wall distance SST-DES")
 
 arg1 = 2*L_t/d_tilde
@@ -410,19 +410,19 @@ def d_boundary_alt_2_plot():
     plt.plot(x_2d[:,0], y_boundary_alt_2, 'k-')
     plt.xlabel("$x$")
     plt.ylabel("$y-y_{wall}$")
-    plt.axis([0.6,1.5,0, 0.2])
+    plt.axis([0.6,1.5,0, 0.5])
     plt.title("Wall distance SST-DDES")
 
 def check_contour_plot():
     plt.figure("Check")
     plt.clf() #clear the figure
-    plt.contourf(x_2d,y_2d, np.maximum(F_DDES,1), 
-                 levels = np.linspace(1,1.1,30),
+    plt.contourf(x_2d,y_2d, F_S, 
+                 levels = np.linspace(0,1,30),
                  cmap = cm.viridis, extend ='max')
     plt.xlabel("$x$")
     plt.ylabel("$y$")
     plt.axis([0.6,1.5, 0, 1])
-    plt.title("Check")
+    plt.title("$F_S$")
     plt.colorbar()
     
 # V.7
