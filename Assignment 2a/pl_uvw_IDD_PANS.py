@@ -358,7 +358,7 @@ def turbulent_shear():
 def turbulent_shear_ratio():
     plt.figure("Turbulent Shear Ratio")
     plt.plot(yplus, uvmean1/(tau12 + uvmean1), label='$\\frac{\\tau_{res}}{\\tau_{tot}}$')
-    plt.plot(yplus, 0.8*line08)
+    plt.plot(yplus, 0.8*line08, label = '0.8 limit')
     plt.plot(270*line_boundary, np.linspace(0,1, np.size(temean)), 'r-', label = 'Boundary')
     plt.title('Turbulent Shear Ratio')
     plt.ylabel("$\\tau$ Ratio")

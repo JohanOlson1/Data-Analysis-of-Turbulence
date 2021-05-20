@@ -58,22 +58,6 @@ nj=int(vectz[2])
 nk=int(vectz[3])
 n=len(vectz)
 
-#            write(48,*)uvec(i,j)
-#            write(48,*)vvec(i,j)
-#            write(48,*)fk2d(i,j)
-#            write(48,*)uvec2(i,j)
-#            write(48,*)vvec2(i,j)
-#            write(48,*)wvec2(i,j)
-#            write(48,*)uvvec(i,j)
-#            write(48,*)p2d(i,j)
-#            write(48,*)rk2d(i,j)
-#            write(48,*)vis2d(i,j)
-#            write(48,*)dissp2d(i,j)
-#            write(48,*)wvec(i,j)
-#            write(48,*)vtvec(i,j)
-#            write(48,*)tvec(i,j)
-
-
 nn=14
 nst=3
 iu=range(nst+1,n,nn)
@@ -200,7 +184,7 @@ C_des = 0.65
 dZ = np.ones((ni-1,nj-1))
 
 # ---- Here
-k_res = 0.5*(uu_2d + vv_2d + ww_2d) # ww_2d aswell? not defined the same
+k_res = 0.5*(uu_2d + vv_2d + ww_2d)
 
 k_tot = k_model_2d + k_res
 
@@ -238,7 +222,7 @@ def fk_lines_given():
     plt.xlabel("$y-y_{wall}$")
     plt.ylabel("$f_k$")
     plt.axis([0, 0.2, 0, 1])
-    plt.title("Wall distance")
+    plt.title("$f_k$ computed")
     plt.legend() 
     
 def fk_lines_computed():
@@ -268,7 +252,7 @@ def fk_lines_computed():
     plt.xlabel("$y-y_{wall}$")
     plt.ylabel("$f_k$")
     plt.axis([0, 0.2, 0, 1])
-    plt.title("Wall distance")
+    plt.title("$f_k$ computed alternative")
     plt.legend()
     
 # V.5 
@@ -329,7 +313,7 @@ def length_scale_lines_PANS():
     plt.xlabel("$y-y_{wall}$")
     plt.ylabel("$Length Scale$")
     plt.axis([0, 0.17, 0, 0.02])
-    plt.title("Wall distance")
+    plt.title("Length Scales")
     plt.legend()
     
 def length_scale_lines_RANS():
@@ -359,7 +343,7 @@ def length_scale_lines_RANS():
     plt.xlabel("$y-y_{wall}$")
     plt.ylabel("$Length Scale$")
     plt.axis([0, 0.17, 0, 1])
-    plt.title("Wall distance")
+    plt.title("Length Scales")
     plt.legend()
     
 omega = diss_2d/(Cmu * k_model_2d)

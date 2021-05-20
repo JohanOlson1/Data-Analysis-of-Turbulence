@@ -173,10 +173,7 @@ idum,idum,nk=u3d.shape
 # y coordinate direction = index 1, second index
 # z coordinate direction = index 2, third index
 
-
-
 ni=len(u3d)
-
 
 #vmean=np.mean(v3d, axis=(2))
 #wmean=np.mean(w3d, axis=(2))
@@ -313,10 +310,39 @@ nn=14
 nst=3
 iu=range(nst+1,n,nn)
 iv=range(nst+2,n,nn)
+iuu=range(nst+4,n,nn)
+ivv=range(nst+5,n,nn)
+iww=range(nst+6,n,nn)
+iuv=range(nst+7,n,nn)
+ik=range(nst+9,n,nn)
+ivis=range(nst+10,n,nn)
+idiss=range(nst+11,n,nn)
+
 u=vectz[iu]/ntstep
 v=vectz[iv]/ntstep
+uu=vectz[iuu]/ntstep
+vv=vectz[ivv]/ntstep
+ww=vectz[iww]/ntstep
+uv=vectz[iuv]/ntstep
+k_model=vectz[ik]/ntstep
+vis=vectz[ivis]/ntstep
+diss=vectz[idiss]/ntstep
+
+# uu is total inst. velocity squared. Hence the resolved turbulent resolved stresses are obtained as
+uu=uu-u**2
+vv=vv-v**2
+#ww=ww-w**2 no w exists...
+uv=uv-u*v
+
 umean_2d=np.reshape(u,(ni,nj))
 vmean_2d=np.reshape(v,(ni,nj))
+uu_2d=np.reshape(uu,(ni,nj))
+uv_2d=np.reshape(uv,(ni,nj))
+vv_2d=np.reshape(vv,(ni,nj))
+ww_2d=np.reshape(ww,(ni,nj))
+k_model_2d=np.reshape(k_model,(ni,nj))
+vis_2d=np.reshape(vis,(ni,nj)) #this is to total viscosity, i.e. vis_tot=vis+vis_turb
+diss_2d=np.reshape(diss,(ni,nj)) 
 
 dudx_mean,dudy_mean=dphidx_dy(x_2d,y_2d,umean_2d)
 
@@ -348,19 +374,27 @@ C_DES = 0.65
 
 L_DES = C_DES*np.maximum(x_2d, y_2d)
 
+k_res = 0.5*(uu_2d + vv_2d + ww_2d)
+
+L_RANS = (k_res**1.5)/diss_2d
+
+L_PANS = (k_model_2d**1.5)/diss_2d
+
 def Lvk_065():
     plt.figure("Figure 065")
     plt.clf() #clear the figure
     xx=0.65;
     i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
-    plt.plot(L_vk1d[i1,0:-1], y_2d[i1,:],'r-', label = '1D')
-    plt.plot(L_vk3d_spanz[i1,:], y_2d[i1,1:-1],'b-', label = '3D')
-    plt.plot(L_vk3d_b_spanz[i1,:], y_2d[i1,1:-1],'g-', label = '3D Alt.') 
-    plt.plot(L_DES[i1,0:-1], y_2d[i1,0:-1],'k-', label = '$C_{DES}\\Delta$')
-    plt.xlabel("Length Scales")
-    plt.ylabel("$y$")
+    plt.plot(y_2d[i1,:], L_vk1d[i1,0:-1],'r-', label = '1D')
+    plt.plot(y_2d[i1,1:-1], L_vk3d_spanz[i1,:],'b-', label = '3D')
+    plt.plot(y_2d[i1,1:-1], L_vk3d_b_spanz[i1,:],'g-', label = '3D Alt.') 
+    plt.plot(y_2d[i1,0:-1], L_DES[i1,0:-1],'k-', label = '$C_{DES}\\Delta$')
+    plt.plot(y_2d[i1,:], L_PANS[i1,0:-1], 'y-', label = '$L_{PANS}$')
+    plt.plot(y_2d[i1,:], L_RANS[i1,0:-1], 'c-', label = '$L_{RANS}$')
+    plt.xlabel("y")
+    plt.ylabel("$Length Scales$")
     plt.title("$x=0.65$")
-    plt.axis([0, 1, np.min(y_2d[i1,0]), 0.3])
+    plt.axis([np.min(y_2d[i1,0]), 0.5, 0, 1])
     plt.legend()
     
 def Lvk_080():
@@ -368,14 +402,16 @@ def Lvk_080():
     plt.clf() #clear the figure
     xx=0.80;
     i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
-    plt.plot(L_vk1d[i1,0:-1], y_2d[i1,:],'r-', label = '1D')
-    plt.plot(L_vk3d_spanz[i1,:], y_2d[i1,1:-1],'b-', label = '3D')
-    plt.plot(L_vk3d_b_spanz[i1,:], y_2d[i1,1:-1],'g-', label = '3D Alt.') 
-    plt.plot(L_DES[i1,0:-1], y_2d[i1,0:-1],'k-', label = '$C_{DES}\\Delta$')
-    plt.xlabel("$L_{vK,3D}$")
-    plt.ylabel("$y$")
+    plt.plot(y_2d[i1,:], L_vk1d[i1,0:-1],'r-', label = '1D')
+    plt.plot(y_2d[i1,1:-1], L_vk3d_spanz[i1,:],'b-', label = '3D')
+    plt.plot(y_2d[i1,1:-1], L_vk3d_b_spanz[i1,:],'g-', label = '3D Alt.') 
+    plt.plot(y_2d[i1,0:-1], L_DES[i1,0:-1],'k-', label = '$C_{DES}\\Delta$')
+    plt.plot(y_2d[i1,:], L_PANS[i1,0:-1], 'y-', label = '$L_{PANS}$')
+    plt.plot(y_2d[i1,:], L_RANS[i1,0:-1], 'c-', label = '$L_{RANS}$')
+    plt.xlabel("y")
+    plt.ylabel("$Length Scales$")
     plt.title("$x=0.80$")
-    plt.axis([0, 1, np.min(y_2d[i1,0]), 0.3])
+    plt.axis([np.min(y_2d[i1,0]), 0.5, 0, 1])
     plt.legend()
     
 def Lvk_090():
@@ -383,14 +419,16 @@ def Lvk_090():
     plt.clf() #clear the figure
     xx=0.90;
     i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
-    plt.plot(L_vk1d[i1,0:-1], y_2d[i1,:],'r-', label = '1D')
-    plt.plot(L_vk3d_spanz[i1,:], y_2d[i1,1:-1],'b-', label = '3D')
-    plt.plot(L_vk3d_b_spanz[i1,:], y_2d[i1,1:-1],'g-', label = '3D Alt.') 
-    plt.plot(L_DES[i1,0:-1], y_2d[i1,0:-1],'k-', label = '$C_{DES}\\Delta$')
-    plt.xlabel("$L_{vK,3D}$")
-    plt.ylabel("$y$")
+    plt.plot(y_2d[i1,:], L_vk1d[i1,0:-1],'r-', label = '1D')
+    plt.plot(y_2d[i1,1:-1], L_vk3d_spanz[i1,:],'b-', label = '3D')
+    plt.plot(y_2d[i1,1:-1], L_vk3d_b_spanz[i1,:],'g-', label = '3D Alt.') 
+    plt.plot(y_2d[i1,0:-1], L_DES[i1,0:-1],'k-', label = '$C_{DES}\\Delta$')
+    plt.plot(y_2d[i1,:], L_PANS[i1,0:-1], 'y-', label = '$L_{PANS}$')    
+    plt.plot(y_2d[i1,:], L_RANS[i1,0:-1], 'c-', label = '$L_{RANS}$')
+    plt.xlabel("y")
+    plt.ylabel("$Length Scales$")
     plt.title("$x=0.90$")
-    plt.axis([0, 1, np.min(y_2d[i1,0]), 0.3])
+    plt.axis([np.min(y_2d[i1,0]), 0.5, 0, 1])
     plt.legend()
 
 def Lvk_130():
@@ -398,14 +436,16 @@ def Lvk_130():
     plt.clf() #clear the figure
     xx=1.30;
     i1 = (np.abs(xx-x_2d[:,1])).argmin()  # find index which closest fits xx
-    plt.plot(L_vk1d[i1,0:-1], y_2d[i1,:],'r-', label = '1D')
-    plt.plot(L_vk3d_spanz[i1,:], y_2d[i1,1:-1],'b-', label = '3D')
-    plt.plot(L_vk3d_b_spanz[i1,:], y_2d[i1,1:-1],'g-', label = '3D Alt.') 
-    plt.plot(L_DES[i1,0:-1], y_2d[i1,0:-1],'k-', label = '$C_{DES}\\Delta$')
-    plt.xlabel("$L_{vK,3D}$")
-    plt.ylabel("$y$")
+    plt.plot(y_2d[i1,:], L_vk1d[i1,0:-1],'r-', label = '1D')
+    plt.plot(y_2d[i1,1:-1], L_vk3d_spanz[i1,:],'b-', label = '3D')
+    plt.plot(y_2d[i1,1:-1], L_vk3d_b_spanz[i1,:],'g-', label = '3D Alt.') 
+    plt.plot(y_2d[i1,0:-1], L_DES[i1,0:-1],'k-', label = '$C_{DES}\\Delta$')
+    plt.plot(y_2d[i1,:], L_PANS[i1,0:-1], 'y-', label = '$L_{PANS}$')    
+    plt.plot(y_2d[i1,:], L_RANS[i1,0:-1], 'c-', label = '$L_{RANS}$')
+    plt.xlabel("y")
+    plt.ylabel("$Length Scales$")
     plt.title("$x=1.30$")
-    plt.axis([0, 1, np.min(y_2d[i1,0]), 0.3])
+    plt.axis([np.min(y_2d[i1,0]), 0.5, 0, 1])
     plt.legend()
 
 def close_fig():
