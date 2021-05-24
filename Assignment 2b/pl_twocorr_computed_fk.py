@@ -212,7 +212,7 @@ dy = np.diff(y_2d, axis = 1)
 
 dy = np.insert(dy,0, dy[:,-1], axis = 1)
 
-y_pos = np.array([0, 1 ,2 ,3, 4])
+y_pos = np.array([10, 30 ,50 ,70, 90])
 
 
 def b33_065():
@@ -277,7 +277,7 @@ def resolution_plot_065():
     plt.plot(y_pos, resolution_number[0], 'r-')
     plt.xlabel("y position j")
     plt.ylabel("$\\frac{Correlation}{cell \\:\\: size}$")
-    plt.axis([0,4,0,16])
+    plt.axis([10,90,0,16])
     plt.title("x = 0.65")
 
 def resolution_plot_080():
@@ -286,7 +286,7 @@ def resolution_plot_080():
     plt.plot(y_pos, resolution_number[1], 'r-')
     plt.xlabel("y position j")
     plt.ylabel("$\\frac{Correlation}{cell \\:\\: size}$")
-    plt.axis([0,4,0,16])
+    plt.axis([10,90,0,16])
     plt.title("x = 0.80")
 
 def resolution_plot_110():
@@ -295,7 +295,7 @@ def resolution_plot_110():
     plt.plot(y_pos, resolution_number[2], 'r-')
     plt.xlabel("y position j")
     plt.ylabel("$\\frac{Correlation}{cell \\:\\: size}$")
-    plt.axis([0,4,0,16])
+    plt.axis([10,90,0,16])
     plt.title("x = 1.10")
 
 def resolution_plot_130():
@@ -304,7 +304,7 @@ def resolution_plot_130():
     plt.plot(y_pos, resolution_number[3], 'r-')
     plt.xlabel("y position j")
     plt.ylabel("$\\frac{Correlation}{cell \\:\\: size}$")
-    plt.axis([0,4,0,16])
+    plt.axis([10,90,0,16])
     plt.title("x = 1.30")
 
 def close_fig():
